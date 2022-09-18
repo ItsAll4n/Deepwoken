@@ -1,0 +1,406 @@
+venyx = loadstring(game:HttpGet'https://raw.githubusercontent.com/ItsAll4n/Deepwoken/main/Venyx-UI-Lib')()
+ui = venyx.new({title = 'Coffee Hub'})
+themes = {
+    Background = Color3.fromRGB(25, 25, 25),
+    Glow = Color3.fromRGB(255, 255, 255),
+    Accent = Color3.fromRGB(25, 25, 25),
+    LightContrast = Color3.fromRGB(25, 25, 25),
+    DarkContrast = Color3.fromRGB(75, 75, 75),
+    TextColor = Color3.fromRGB(255, 115, 0)
+}
+
+getgenv().nclip = false
+getgenv().fly = false
+getgenv().hunger = false
+getgenv().thirst = false
+getgenv().closeplayer = false
+getgenv().notify = false
+getgenv().hnotify = false
+getgenv().tnotify = false
+flyspeed = 100
+
+client = game:service'Players'.LocalPlayer
+char = client.Character or client.CharacterAdded:Wait(1)
+mouse = client:GetMouse()
+COREGUI = game:service'CoreGui'
+data = Instance.new'BindableFunction'
+cam = workspace.CurrentCamera
+ctrl = {f = 0, b = 0, l = 0, r = 0}
+lastctrl = {f = 0, b = 0, l = 0, r = 0}
+
+function decode(str)
+    local K, F = 8186484168865098, 16384 + 4887
+    return (str:gsub('%x%x', function(c)
+        local L = K % 274877906944
+        local H = (K - L) / 274877906944
+        local M = H % 128
+        c = tonumber(c, 16)
+        local m = (c + (H - M) / 128) * (2*M + 1) % 256
+        K = L * F + H + c + m
+        return string.char(m)
+    end))
+end
+
+ivz = decode('146510be2c8e86c7')
+lighting = game:service(ivz)
+
+function unclip()
+    pcall(function()
+        char.Head.CanCollide = true
+        char.Torso.CanCollide = true
+        char['Left Leg'].CanCollide = false
+        char['Right Leg'].CanCollide = false
+    end)
+end
+
+function round(num, numDecimalPlaces)
+	local mult = 10^(numDecimalPlaces or 0)
+	return math.floor(num * mult + 0.5) / mult
+end
+
+function data.OnInvoke(response)
+    if response:match'Yes' then
+        client:Kick'Cya next time!'
+    else
+        return
+    end
+end
+
+function getRoot(character)
+	local rootPart = character:FindFirstChild'HumanoidRootPart' or character:FindFirstChild'Torso' or character:FindFirstChild'UpperTorso'
+	return rootPart
+end
+
+function ESP(plr)
+	task.spawn(function()
+		for i,v in pairs(COREGUI:GetChildren()) do
+			if v.Name == plr.Name..'_ESP' then
+				v:Destroy()
+			end
+		end
+		wait()
+		if plr.Character and plr.Name ~= client.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
+		    local ESPholder = Instance.new'Folder'
+			ESPholder.Name = plr.Name..'_ESP'
+			ESPholder.Parent = COREGUI
+			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+			for b,n in pairs (plr.Character:GetChildren()) do
+				if (n:IsA'BasePart') then
+					local a = Instance.new'BoxHandleAdornment'
+					a.Name = plr.Name
+					a.Parent = ESPholder
+					a.Adornee = n
+					a.AlwaysOnTop = true
+					a.ZIndex = 10
+					a.Size = n.Size
+					a.Transparency = 1
+					a.Color = plr.TeamColor
+				end
+			end
+			if plr.Character and plr.Character:FindFirstChild'Head' then
+				local BillboardGui = Instance.new'BillboardGui'
+				local TextLabel = Instance.new'TextLabel'
+				BillboardGui.Adornee = plr.Character.Head
+				BillboardGui.Name = plr.Name
+				BillboardGui.Parent = ESPholder
+				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
+				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
+				BillboardGui.AlwaysOnTop = true
+				TextLabel.Parent = BillboardGui
+				TextLabel.BackgroundTransparency = 1
+				TextLabel.Position = UDim2.new(0, 0, 0, -50)
+				TextLabel.Size = UDim2.new(0, 100, 0, 100)
+				TextLabel.TextSize = 8.5
+				TextLabel.TextColor3 = Color3.new(255,255,255)
+				TextLabel.TextStrokeTransparency = 0
+				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+				TextLabel.ZIndex = 10
+				local espLoopFunc
+				local teamChange
+				local addedFunc
+				addedFunc = plr.CharacterAdded:Connect(function()
+					if ESPenabled then
+						espLoopFunc:Disconnect()
+						teamChange:Disconnect()
+						ESPholder:Destroy()
+						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+						ESP(plr)
+						addedFunc:Disconnect()
+					else
+						teamChange:Disconnect()
+						addedFunc:Disconnect()
+					end
+				end)
+				teamChange = plr:GetPropertyChangedSignal'TeamColor':Connect(function()
+					if ESPenabled then
+						espLoopFunc:Disconnect()
+						addedFunc:Disconnect()
+						ESPholder:Destroy()
+						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+						ESP(plr)
+						teamChange:Disconnect()
+					else
+						teamChange:Disconnect()
+					end
+				end)
+				local function espLoop()
+					if COREGUI:FindFirstChild(plr.Name..'_ESP') then
+						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then
+							local pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
+							TextLabel.Text = plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..' | Distance: '..pos
+						end
+					else
+						teamChange:Disconnect()
+						addedFunc:Disconnect()
+						espLoopFunc:Disconnect()
+					end
+				end
+				espLoopFunc = game:service'RunService'.RenderStepped:Connect(espLoop)
+			end
+		end
+	end)
+end
+
+cp = ui:addPage({title = 'Client', icon = 5012544693})
+ps = cp:addSection({title = 'Personal'})
+
+ps:addKeybind({title = 'Fly', key = Enum.KeyCode.F4, callback = function()
+    if not fly then
+        fly = true
+        spawn(function()
+            pcall(function()
+                repeat wait()
+                    if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+                        bv = Instance.new('BodyVelocity', char.HumanoidRootPart)
+                        bv.maxForce = Vector3.new(4000000, 4000000, 4000000)
+                        bv.velocity = (cam.CoordinateFrame.lookVector * (ctrl.f + ctrl.b) + (cam.CoordinateFrame * CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * .2, 0).p) - cam.CoordinateFrame.p) * flyspeed / 1.5
+                        char.HumanoidRootPart.Anchored = false
+                        lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+                    else
+                        char.HumanoidRootPart.Anchored = true
+                        end
+                until not fly
+                    char.HumanoidRootPart.Anchored = false
+                    ctrl = {f = 0, b = 0, l = 0, r = 0}
+                    lastctrl = {f = 0, b = 0, l = 0, r = 0}
+                end)
+            end)
+        elseif fly then
+            fly = false
+        end
+    end
+})
+
+ps:addSlider({title = 'Speed', default = 100, min = 50, max = 200, callback = function(speed)
+    flyspeed = speed
+end
+})
+
+ps:addKeybind({title = 'Noclip', key = Enum.KeyCode.F5, callback = function()
+    if not nclip then
+        nclip = true
+    elseif nclip then
+        nclip = false
+        unclip()
+    end
+end
+})
+
+ps:addButton({title = 'Mod Check', callback = function()
+    game:service'Players'.PlayerAdded:Connect(function(snitch)
+        if snitch:IsInGroup(5212858) then
+            game:service'StarterGui':SetCore('SendNotification', {
+                Title = snitch.Name..' Is a Snitch!',
+                Text = 'Would you like to leave?',
+                Duration = 100,
+                Callback = data,
+                Button1 = 'Yes',
+                Button2 = 'No'
+            })
+        end
+    end)
+end
+})
+
+vp = ui:addPage({title = 'Visuals', icon = 6523858394})
+vs = vp:addSection({title = 'Visual'})
+vn = vp:addSection({title = 'Notify'})
+vs1 = vp:addSection({title = 'Stat Check'})
+
+vs:addToggle({title = 'Player ESP', callback = function(eval)
+    ESPenabled = eval
+    if not ESPenabled then
+        for i, c in pairs(COREGUI:GetChildren()) do
+            if string.sub(c.Name, -4) == '_ESP' then
+                c:Destroy()
+            end
+        end    
+    else
+        for _, v in pairs(game.Players:GetChildren()) do
+            if v.ClassName == 'Player' and v.Name ~= client.Name then
+                ESP(v)
+            end
+        end
+    end
+end
+})
+
+vs:addButton({title = 'Full Bright', callback = function()
+    lighting.Brightness = 2
+	lighting.ClockTime = 14
+	lighting.FogEnd = 100000
+	lighting.GlobalShadows = false
+	lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
+end
+})
+
+vs:addButton({title = 'No Fog', callback = function()
+    lighting.FogEnd = 100000
+	for i,v in pairs(lighting:GetDescendants()) do
+		if v:IsA'Atmosphere' then
+			v:Destroy()
+		end
+	end
+end
+})
+
+vs:addButton({title = 'Day', callback = function()
+    lighting.ClockTime = 14
+end
+})
+
+vs:addButton({title = 'Night', callback = function()
+    lighting.ClockTime = 0
+end
+})
+
+vn:addToggle({title = 'Player', callback = function(val)
+    if not closeplayer then
+        closeplayer = true
+        while closeplayer do
+            task.wait(1)
+            for _, plr in pairs(game.Players:GetChildren()) do
+                if plr.Name ~= client.Name and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
+                    pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
+                        if pos <= 500 and not notify then
+                            ui:Notify({title = plr.Name..' is Near!', text = 'Current Distance: '..pos})
+                            notify = true
+                        end
+                        if pos > 500 and notify then
+                            notify = false
+                        end
+                    end
+                end
+            end
+        elseif closeplayer then
+            closeplayer = false
+    end
+end
+})
+
+vn:addToggle({title = 'Hunger', callback = function(val)
+    if not hunger then
+        hunger = true
+        char.Stomach:GetPropertyChangedSignal'Value':connect(function()
+            if hunger and char.Stomach.Value <= 45 and not hnotify then
+                hnotify = true
+                ui:Notify({title = 'Hunger: Low', text = 'Eat Some Food!'})
+                wait(1)
+            end
+            if hunger and char.Stomach.Value > 45 and hnotify then
+                hnotify = false
+            end
+        end)
+    elseif hunger then
+        hunger = false
+    end
+end
+})
+
+vn:addToggle({title = 'Thirst', callback = function(val)
+    if not thirst then
+        thirst = true
+        char.Water:GetPropertyChangedSignal'Value':connect(function()
+            if thirst and char.Water.Value <= 45 and not tnotify then
+                tnotify = true
+                ui:Notify({title = 'Thirst: Low', text = 'Drink Some Water!'})
+                wait(1)
+            end
+            if thirst and char.Water.Value > 45 and tnotify then
+                tnotify = false
+            end
+        end)
+    elseif thirst then
+        thirst = false
+    end
+end
+})
+
+vs1:addTextbox({title = 'Name:', default = 'Awaiting Input...', callback = function(value, focuslLost)
+    name = value
+    if (focuslLost) then
+    ui:Notify({title = 'Name: '..name, text = 'Ether: '..math.floor(workspace.Live[name].Ether.MaxValue)..' | Reservoir: '..math.floor(workspace.Live[name].Reservoir.MaxValue)..' | Posture: '..math.floor(workspace.Live[name].BreakMeter.Value)..' | Agility: '..math.floor(workspace.Live[name].Agility.Value)..' | Blood: '..math.floor(workspace.Live[name].Blood.Value)})
+    end
+end
+})
+
+sp = ui:addPage({title = 'Settings', icon = 2484556379})
+ss = sp:addSection({title = 'UI'})
+sv = sp:addSection({title = 'Theme'})
+
+ss:addKeybind({title = 'Toggle', key = Enum.KeyCode.RightControl, callback = function()
+    ui:toggle()
+end
+})
+
+ss:addButton({title = 'Close', callback = function()
+    COREGUI['Coffee Hub']:Destroy()
+end
+})
+
+ss:addButton({title = 'Bindings', callback = function()
+    ui:Notify({title = 'Default Bindings:', text = 'Fly: F4 | Noclip: F5 | Toggle: RightControl'})
+end
+})
+
+for theme, color in pairs(themes) do
+    sv:addColorPicker({title = theme, default = color, callback = function(color3)
+        ui:setTheme({theme = theme, color3 = color3})
+        end
+    })
+end
+
+game:service'RunService'.Stepped:connect(function()
+    pcall(function()
+        if nclip then
+            for _, v in pairs(char:GetDescendants()) do
+                if v:IsA'BasePart' then
+                    v.CanCollide = false
+                end
+            end
+        end
+    end)
+end)
+
+mouse.KeyDown:connect(function(key)
+    if key:lower():match'w' then
+        ctrl.f = 1
+    elseif key:lower():match's' then
+        ctrl.b = -1
+    elseif key:lower():match'a' then
+        ctrl.l = -1
+    elseif key:lower():match'd' then
+        ctrl.r = 1
+    end
+end)
+mouse.KeyUp:connect(function(key)
+    if key:lower():match'w' then
+        ctrl.f = 0
+    elseif key:lower():match's' then
+        ctrl.b = 0
+    elseif key:lower():match'a' then
+        ctrl.l = 0
+    elseif key:lower():match'd' then
+        ctrl.r = 0
+    end
+end)
