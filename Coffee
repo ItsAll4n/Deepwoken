@@ -81,7 +81,7 @@ function ESP(plr)
 		end
 		wait()
 		if plr.Character and plr.Name ~= client.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
-		    local ESPholder = Instance.new'Folder'
+		   local ESPholder = Instance.new'Folder'
 			ESPholder.Name = plr.Name..'_ESP'
 			ESPholder.Parent = COREGUI
 			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
@@ -122,26 +122,11 @@ function ESP(plr)
 				addedFunc = plr.CharacterAdded:Connect(function()
 					if ESPenabled then
 						espLoopFunc:Disconnect()
-						teamChange:Disconnect()
 						ESPholder:Destroy()
 						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
 						ESP(plr)
-						addedFunc:Disconnect()
 					else
-						teamChange:Disconnect()
 						addedFunc:Disconnect()
-					end
-				end)
-				teamChange = plr:GetPropertyChangedSignal'TeamColor':Connect(function()
-					if ESPenabled then
-						espLoopFunc:Disconnect()
-						addedFunc:Disconnect()
-						ESPholder:Destroy()
-						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
-						ESP(plr)
-						teamChange:Disconnect()
-					else
-						teamChange:Disconnect()
 					end
 				end)
 				local function espLoop()
@@ -151,7 +136,6 @@ function ESP(plr)
 							TextLabel.Text = plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..' | Distance: '..pos
 						end
 					else
-						teamChange:Disconnect()
 						addedFunc:Disconnect()
 						espLoopFunc:Disconnect()
 					end
@@ -238,7 +222,7 @@ ps:addToggle({title = 'Mod Check', callback = function(state)
         end
     end)
    else
-       m:Disconnect()
+      m:Disconnect()
     end
 end
 })
@@ -267,6 +251,7 @@ end
 })
 
 vs:addToggle({title = 'Full Bright', callback = function(state)
+   local bloop
    if bloop then
       bloop:Disconnect()
    end
@@ -282,7 +267,7 @@ end
 })
 
 vs:addButton({title = 'No Fog', callback = function()
-    lighting.FogEnd = 100000
+   lighting.FogEnd = 100000
 	for i,v in pairs(lighting:GetDescendants()) do
 		if v:IsA'Atmosphere' then
 			v:Destroy()
@@ -302,25 +287,26 @@ end
 })
 
 vn:addToggle({title = 'Player', callback = function(val)
-    if not closeplayer then
-        closeplayer = true
-        while closeplayer do
-            task.wait(1)
-            for _, plr in pairs(game.Players:GetChildren()) do
-                if plr.Name ~= client.Name and plr.Name ~= wplr and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
-                    pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
-                        if pos <= 500 and not notify then
-                            ui:Notify({title = plr.Name..' is Near!', text = 'Current Distance: '..pos})
-                            notify = true
-                        end
-                        if pos > 500 and notify then
-                            notify = false
-                        end
-                    end
-                end
+   local wplr
+   if not closeplayer then
+      closeplayer = true
+      while closeplayer do
+         task.wait(1)
+         for _, plr in pairs(game.Players:GetChildren()) do
+            if plr.Name ~= client.Name and plr.Name ~= wplr and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
+               pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
+               if pos <= 500 and not notify then
+                  ui:Notify({title = plr.Name..' is Near!', text = 'Current Distance: '..pos})
+                  notify = true
+               end
+               if pos > 500 and notify then
+                  notify = false
+               end
             end
-        elseif closeplayer then
-            closeplayer = false
+         end
+      end
+   elseif closeplayer then
+   closeplayer = false
     end
 end
 })
