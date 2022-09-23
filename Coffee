@@ -21,10 +21,10 @@ getgenv().tnotify = false
 flyspeed = 100
 
 client = game:service'Players'.LocalPlayer
-char = workspace.Live[client.Name] or client.CharacterAdded:Wait(1)
+char = workspace.Live[client.Name]
+hrp = char:WaitForChild'HumanoidRootPart'
 mouse = client:GetMouse()
 COREGUI = game:service'CoreGui'
-data = Instance.new'BindableFunction'
 cam = workspace.CurrentCamera
 ctrl = {f = 0, b = 0, l = 0, r = 0}
 lastctrl = {f = 0, b = 0, l = 0, r = 0}
@@ -55,16 +55,8 @@ function unclip()
 end
 
 function round(num, numDecimalPlaces)
-	local mult = 10^(numDecimalPlaces or 0)
+	local mult = 10 ^ (numDecimalPlaces or 0)
 	return math.floor(num * mult + 0.5) / mult
-end
-
-function data.OnInvoke(response)
-    if response:match'Yes' then
-        client:Kick'Cya next time!'
-    else
-        return
-    end
 end
 
 function getRoot(character)
@@ -80,7 +72,7 @@ function ESP(plr)
 			end
 		end
 		wait()
-		if plr.Character and plr.Name ~= client.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
+		if plr.Character and plr.Character.HumanoidRootPart and plr.Name ~= client.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
 		   local ESPholder = Instance.new'Folder'
 			ESPholder.Name = plr.Name..'_ESP'
 			ESPholder.Parent = COREGUI
@@ -98,7 +90,7 @@ function ESP(plr)
 					a.Color = plr.TeamColor
 				end
 			end
-			if plr.Character and plr.Character:FindFirstChild'Head' then
+			if plr.Character and plr.Character.HumanoidRootPart and plr.Character:FindFirstChild'Head' then
 				local BillboardGui = Instance.new'BillboardGui'
 				local TextLabel = Instance.new'TextLabel'
 				BillboardGui.Adornee = plr.Character.Head
@@ -156,16 +148,16 @@ ps:addKeybind({title = 'Fly', key = Enum.KeyCode.F4, callback = function()
             pcall(function()
                 repeat wait()
                     if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
-                        bv = Instance.new('BodyVelocity', char.HumanoidRootPart)
+                        bv = Instance.new('BodyVelocity', hrp)
                         bv.maxForce = Vector3.new(4000000, 4000000, 4000000)
                         bv.velocity = (cam.CoordinateFrame.lookVector * (ctrl.f + ctrl.b) + (cam.CoordinateFrame * CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * .2, 0).p) - cam.CoordinateFrame.p) * flyspeed / 1.5
-                        char.HumanoidRootPart.Anchored = false
+                        hrp.Anchored = false
                         lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
                     else
-                        char.HumanoidRootPart.Anchored = true
+                        hrp.Anchored = true
                         end
                 until not fly
-                    char.HumanoidRootPart.Anchored = false
+                    hrp.Anchored = false
                     ctrl = {f = 0, b = 0, l = 0, r = 0}
                     lastctrl = {f = 0, b = 0, l = 0, r = 0}
                 end)
@@ -251,18 +243,24 @@ end
 })
 
 vs:addToggle({title = 'Full Bright', callback = function(state)
-   local bloop
-   if bloop then
-      bloop:Disconnect()
-   end
-   function Bright()
-      lighting.Brightness = 2
-      lighting.ClockTime = 14
-      lighting.FogEnd = 100000
-      lighting.GlobalShadows = false
-      lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
-   end
-   bloop = game:service'RunService'.RenderStepped:Connect(Bright)
+    bloop = state
+    if not bloop then
+        if brightloop then
+            brightloop:Disconnect()
+        end
+        bloop = true
+        local brightloop
+        function Bright()
+          lighting.Brightness = 2
+          lighting.ClockTime = 14
+          lighting.FogEnd = 100000
+          lighting.GlobalShadows = false
+          lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
+       end
+   else
+       bloop = false
+       brightloop = game:service'RunService'.RenderStepped:Connect(Bright)
+    end
 end
 })
 
