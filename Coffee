@@ -9,6 +9,7 @@ themes = {
     TextColor = Color3.fromRGB(255, 115, 0)
 }
 
+getgenv().nfall = false
 getgenv().nclip = false
 getgenv().fly = false
 getgenv().hunger = false
@@ -203,6 +204,23 @@ ps:addKeybind({title = 'Noclip', key = Enum.KeyCode.F5, callback = function()
         nclip = false
         unclip()
     end
+end
+})
+
+ps:addButton({title = 'NoFall', callback = function()
+    local Closure,Caller = hide_me or newcclosure,checkcaller or is_protosmasher_caller or Cer.isCerus
+    local call
+    call = hookmetamethod(game,'__namecall', newcclosure(function(Self,...)
+        local args = {...}
+        if Caller() and nfall then return call(Self,...) end
+        local method = getnamecallmethod()
+        if method == 'FireServer' and typeof(args[1]) == 'number' then
+            return
+        elseif method == 'FindFirstChild' and args[1] == "BodyVelocity" then
+            return
+        end
+        return call(Self,...)
+    end))
 end
 })
 
