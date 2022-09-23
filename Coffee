@@ -21,7 +21,7 @@ getgenv().tnotify = false
 flyspeed = 100
 
 client = game:service'Players'.LocalPlayer
-char = client.Character or client.CharacterAdded:Wait(1)
+char = workspace.Live[client.Name] or client.CharacterAdded:Wait(1)
 mouse = client:GetMouse()
 COREGUI = game:service'CoreGui'
 data = Instance.new'BindableFunction'
