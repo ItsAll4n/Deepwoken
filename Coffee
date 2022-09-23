@@ -207,36 +207,39 @@ ps:addKeybind({title = 'Noclip', key = Enum.KeyCode.F5, callback = function()
 end
 })
 
-ps:addButton({title = 'NoFall', callback = function()
-    local Closure,Caller = hide_me or newcclosure,checkcaller or is_protosmasher_caller or Cer.isCerus
-    local call
-    call = hookmetamethod(game,'__namecall', newcclosure(function(Self,...)
-        local args = {...}
-        if Caller() and nfall then return call(Self,...) end
-        local method = getnamecallmethod()
-        if method == 'FireServer' and typeof(args[1]) == 'number' then
+ps:addKeybind({title = 'NoFall', key = Enum.KeyCode.F6, callback = function()
+   if not nfall then
+      nfall = true
+      local Closure,Caller = hide_me or newcclosure,checkcaller or is_protosmasher_caller or Cer.isCerus
+      local call
+      call = hookmetamethod(game,'__namecall', newcclosure(function(Self,...)
+         local args = {...}
+         if Caller() then return call(Self,...) end
+         local method = getnamecallmethod()
+         if method == 'FireServer' and nfall and typeof(args[1]) == 'number' then
             return
-        elseif method == 'FindFirstChild' and args[1] == "BodyVelocity" then
+         elseif method == 'FindFirstChild' and args[1] == "BodyVelocity" then
             return
-        end
-        return call(Self,...)
-    end))
+         end
+         return call(Self,...)
+      end))
+   elseif nfall then
+      nfall = false
+   end
 end
 })
 
-ps:addButton({title = 'Mod Check', callback = function()
-    game:service'Players'.PlayerAdded:Connect(function(snitch)
+ps:addToggle({title = 'Mod Check', callback = function(state)
+   mcheck = state
+   if not mcheck then
+      m = game:service'Players'.PlayerAdded:Connect(function(snitch)
         if snitch:IsInGroup(5212858) then
-            game:service'StarterGui':SetCore('SendNotification', {
-                Title = snitch.Name..' Is a Snitch!',
-                Text = 'Would you like to leave?',
-                Duration = 100,
-                Callback = data,
-                Button1 = 'Yes',
-                Button2 = 'No'
-            })
+            ui:Notify({title = snitch.Name..'is a snitch!', text = 'I would leave if I were you.'})
         end
     end)
+   else
+       m:Disconnect()
+    end
 end
 })
 
@@ -263,12 +266,18 @@ vs:addToggle({title = 'Player ESP', callback = function(eval)
 end
 })
 
-vs:addButton({title = 'Full Bright', callback = function()
-    lighting.Brightness = 2
-	lighting.ClockTime = 14
-	lighting.FogEnd = 100000
-	lighting.GlobalShadows = false
-	lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
+vs:addToggle({title = 'Full Bright', callback = function(state)
+   if bloop then
+      bloop:Disconnect()
+   end
+   function Bright()
+      lighting.Brightness = 2
+      lighting.ClockTime = 14
+      lighting.FogEnd = 100000
+      lighting.GlobalShadows = false
+      lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
+   end
+   bloop = game:service'RunService'.RenderStepped:Connect(Bright)
 end
 })
 
@@ -298,7 +307,7 @@ vn:addToggle({title = 'Player', callback = function(val)
         while closeplayer do
             task.wait(1)
             for _, plr in pairs(game.Players:GetChildren()) do
-                if plr.Name ~= client.Name and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
+                if plr.Name ~= client.Name and plr.Name ~= wplr and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
                     pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
                         if pos <= 500 and not notify then
                             ui:Notify({title = plr.Name..' is Near!', text = 'Current Distance: '..pos})
@@ -313,6 +322,11 @@ vn:addToggle({title = 'Player', callback = function(val)
         elseif closeplayer then
             closeplayer = false
     end
+end
+})
+
+vn:addTextbox({title = 'Whitelist', default = 'Awaiting Input...', callback = function(value, focuslLost)
+   wplr = value
 end
 })
 
