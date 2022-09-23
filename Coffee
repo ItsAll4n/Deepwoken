@@ -309,8 +309,10 @@ vn:addToggle({title = 'Player', callback = function(val)
 end
 })
 
-vn:addTextbox({title = 'Whitelist', default = 'Awaiting Input...', callback = function(value, focuslLost)
-   wplr = value
+vn:addTextbox({title = 'Whitelist', default = 'Awaiting Input...', callback = function(value, focusLost)
+    if (focusLost) then
+        wplr = value
+    end
 end
 })
 
@@ -352,9 +354,9 @@ vn:addToggle({title = 'Thirst', callback = function(val)
 end
 })
 
-vs1:addTextbox({title = 'Name:', default = 'Awaiting Input...', callback = function(value, focuslLost)
+vs1:addTextbox({title = 'Name:', default = 'Awaiting Input...', callback = function(value, focusLost)
     name = value
-    if (focuslLost) then
+    if (focusLost) then
     ui:Notify({title = 'Name: '..name, text = 'Ether: '..math.floor(workspace.Live[name].Ether.MaxValue)..' | Reservoir: '..math.floor(workspace.Live[name].Reservoir.MaxValue)..' | Posture: '..math.floor(workspace.Live[name].BreakMeter.Value)..' | Agility: '..math.floor(workspace.Live[name].Agility.Value)..' | Blood: '..math.floor(workspace.Live[name].Blood.Value)})
     end
 end
