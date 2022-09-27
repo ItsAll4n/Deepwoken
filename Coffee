@@ -1,5 +1,10 @@
+repeat
+    wait(1)
+until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game:IsLoaded()
+
 venyx = loadstring(game:HttpGet'https://raw.githubusercontent.com/zxciaz/VenyxUI/main/Reuploaded')()
-ui = venyx.new({title = 'Coffee Hub'})
+ui = venyx.new('Midwoke', 5013109572)
+
 themes = {
     Background = Color3.fromRGB(25, 25, 25),
     Glow = Color3.fromRGB(255, 255, 255),
@@ -19,13 +24,16 @@ getgenv().notify = false
 getgenv().hnotify = false
 getgenv().tnotify = false
 getgenv().magpos = false
+getgenv().bloop = false
+getgenv().mcheck = false
+getgenv().esp = false
 flyspeed = 100
 
 client = game:service'Players'.LocalPlayer
-char = workspace.Live[client.Name]
+char = workspace.Live[client.Name] or client.Character or client.CharacterAdded:Wait(1)
 hrp = char:WaitForChild'HumanoidRootPart'
 mouse = client:GetMouse()
-COREGUI = game:service'CoreGui'
+core = game:service'CoreGui'
 cam = workspace.CurrentCamera
 ctrl = {f = 0, b = 0, l = 0, r = 0}
 lastctrl = {f = 0, b = 0, l = 0, r = 0}
@@ -43,8 +51,8 @@ function decode(str)
     end))
 end
 
-ivz = decode('146510be2c8e86c7')
-lighting = game:service(ivz)
+all4n = decode('146510be2c8e86c7')
+lighting = game:service(all4n)
 
 function unclip()
     pcall(function()
@@ -67,82 +75,107 @@ end
 
 function ESP(plr)
 	task.spawn(function()
-		for i,v in pairs(COREGUI:GetChildren()) do
+		for i,v in pairs(core:GetChildren()) do
 			if v.Name == plr.Name..'_ESP' then
 				v:Destroy()
 			end
 		end
 		wait()
-		if plr.Character and plr.Character.HumanoidRootPart and plr.Name ~= client.Name and not COREGUI:FindFirstChild(plr.Name..'_ESP') then
-		   local ESPholder = Instance.new'Folder'
-			ESPholder.Name = plr.Name..'_ESP'
-			ESPholder.Parent = COREGUI
+		if plr.Character and plr.Name ~= client.Name and not core:FindFirstChild(plr.Name..'_ESP') then
+			local Holder = Instance.new'Folder'
+			Holder.Name = plr.Name..'_ESP'
+			Holder.Parent = core
 			repeat wait(1) until plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
 			for b,n in pairs (plr.Character:GetChildren()) do
-				if (n:IsA'BasePart') then
+				if n:IsA'BasePart' then
 					local a = Instance.new'BoxHandleAdornment'
 					a.Name = plr.Name
-					a.Parent = ESPholder
+					a.Parent = Holder
 					a.Adornee = n
 					a.AlwaysOnTop = true
 					a.ZIndex = 10
 					a.Size = n.Size
 					a.Transparency = 1
-					a.Color = plr.TeamColor
 				end
 			end
-			if plr.Character and plr.Character.HumanoidRootPart and plr.Character:FindFirstChild'Head' then
-				local BillboardGui = Instance.new'BillboardGui'
-				local TextLabel = Instance.new'TextLabel'
-				BillboardGui.Adornee = plr.Character.Head
-				BillboardGui.Name = plr.Name
-				BillboardGui.Parent = ESPholder
-				BillboardGui.Size = UDim2.new(0, 100, 0, 150)
-				BillboardGui.StudsOffset = Vector3.new(0, 1, 0)
-				BillboardGui.AlwaysOnTop = true
-				TextLabel.Parent = BillboardGui
-				TextLabel.BackgroundTransparency = 1
-				TextLabel.Position = UDim2.new(0, 0, 0, -50)
-				TextLabel.Size = UDim2.new(0, 100, 0, 100)
-				TextLabel.TextSize = 8.5
-				TextLabel.TextColor3 = Color3.new(255,255,255)
-				TextLabel.TextStrokeTransparency = 0
-				TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-				TextLabel.ZIndex = 10
-				local espLoopFunc
-				local teamChange
-				local addedFunc
-				addedFunc = plr.CharacterAdded:Connect(function()
-					if ESPenabled then
-						espLoopFunc:Disconnect()
-						ESPholder:Destroy()
+			if plr.Character and plr.Character:FindFirstChild'Head' then
+				local Board = Instance.new'BillboardGui'
+				local Label = Instance.new'TextLabel'
+				Board.Adornee = plr.Character.Head
+				Board.Name = plr.Name
+				Board.Parent = Holder
+				Board.Size = UDim2.new(0, 100, 0, 150)
+				Board.StudsOffset = Vector3.new(0, 1, 0)
+				Board.AlwaysOnTop = true
+				Label.Parent = Board
+				Label.BackgroundTransparency = 1
+				Label.Position = UDim2.new(0, 0, 0, -50)
+				Label.Size = UDim2.new(0, 100, 0, 100)
+				Label.TextSize = 8
+				Label.TextColor3 = Color3.new(255, 255, 255)
+				Label.TextStrokeTransparency = 0
+				Label.TextYAlignment = Enum.TextYAlignment.Bottom
+				Label.Text = 'Name: '..plr.Name
+				Label.ZIndex = 10
+				local Loop
+				local Added
+				Added = plr.CharacterAdded:Connect(function()
+					if esp then
+						Loop:Disconnect()
+						Holder:Destroy()
 						repeat wait(1) until getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
 						ESP(plr)
+						Added:Disconnect()
 					else
-						addedFunc:Disconnect()
+						Added:Disconnect()
 					end
 				end)
 				local function espLoop()
-					if COREGUI:FindFirstChild(plr.Name..'_ESP') then
-						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then
-							local pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
-							TextLabel.Text = plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..' | Distance: '..pos
+					if core:FindFirstChild(plr.Name..'_ESP') then
+						if plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and client.Character and getRoot(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
+							local pos = math.floor((getRoot(client.Character).Position - getRoot(plr.Character).Position).magnitude)
+							Label.Text = plr.Name..' | Health: '..round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..' | '..pos
 						end
 					else
-						addedFunc:Disconnect()
-						espLoopFunc:Disconnect()
+						Added:Disconnect()
+						Loop:Disconnect()
 					end
 				end
-				espLoopFunc = game:service'RunService'.RenderStepped:Connect(espLoop)
+				Loop = game:service'RunService'.RenderStepped:Connect(espLoop)
 			end
 		end
 	end)
 end
 
-cp = ui:addPage({title = 'Client', icon = 5012544693})
-ps = cp:addSection({title = 'Personal'})
+function Tween(LOCATION)
+    spawn(function()
+        if game.PlaceId ~= 5735553160 and (hrp.Position - Vector3.new(LOCATION.Position.X, LOCATION.Position.Y, LOCATION.Position.Z)).magnitude > 200 then
+            repeat
+                wait()
+                hrp.Position = hrp.Position - Vector3.new(0, 5, 0)
+            until hrp.Position.Y <= 5
+        end
+        local check = Vector3.new(LOCATION.Position.X, LOCATION.Position.Y, LOCATION.Position.Z)
+        if game.PlaceId ~= 5735553160 and (hrp.Position - Vector3.new(LOCATION.Position.X, LOCATION.Position.Y, LOCATION.Position.Z)).magnitude > 200 then
+            check = Vector3.new(LOCATION.Position.X, 2, LOCATION.Position.Z)
+        end
+        repeat
+            wait()
+            local dir = check - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((250 - 1) * 1000, (250 + 2.5) * 1000) / 1000)
+        until (hrp.Position - check).magnitude <= 10
+        repeat
+            wait()
+            local dir = Vector3.new(LOCATION.Position.X, LOCATION.Position.Y, LOCATION.Position.Z) - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until hrp.Position.Y >= LOCATION.Y
+    end)
+end
 
-ps:addKeybind({title = 'Fly', key = Enum.KeyCode.F4, callback = function()
+cp = ui:addPage('Client', 5012544693)
+ps = cp:addSection('Personal')
+
+ps:addKeybind('Fly', Enum.KeyCode.F4, function()
     if not fly then
         fly = true
         spawn(function()
@@ -156,179 +189,141 @@ ps:addKeybind({title = 'Fly', key = Enum.KeyCode.F4, callback = function()
                         lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
                     else
                         hrp.Anchored = true
-                        end
+                    end
                 until not fly
-                    hrp.Anchored = false
-                    ctrl = {f = 0, b = 0, l = 0, r = 0}
-                    lastctrl = {f = 0, b = 0, l = 0, r = 0}
-                end)
+                hrp.Anchored = false
+                ctrl = {f = 0, b = 0, l = 0, r = 0}
+                lastctrl = {f = 0, b = 0, l = 0, r = 0}
             end)
-        elseif fly then
-            fly = false
-        end
+        end)
+    elseif fly then
+        fly = false
     end
-})
+end)
 
-ps:addSlider({title = 'Speed', default = 100, min = 50, max = 200, callback = function(speed)
-    flyspeed = speed
-end
-})
-
-ps:addKeybind({title = 'Noclip', key = Enum.KeyCode.F5, callback = function()
+ps:addKeybind('Noclip', Enum.KeyCode.F5, function()
     if not nclip then
         nclip = true
     elseif nclip then
         nclip = false
         unclip()
     end
-end
-})
+end)
 
-ps:addKeybind({title = 'NoFall', key = Enum.KeyCode.F6, callback = function()
-   if not nfall then
-      nfall = true
-      local Closure,Caller = hide_me or newcclosure,checkcaller or is_protosmasher_caller or Cer.isCerus
-      local call
-      call = hookmetamethod(game,'__namecall', newcclosure(function(Self,...)
-         local args = {...}
-         if Caller() then return call(Self,...) end
-         local method = getnamecallmethod()
-         if method == 'FireServer' and nfall and typeof(args[1]) == 'number' then
-            return
-         elseif method == 'FindFirstChild' and args[1] == "BodyVelocity" then
-            return
-         end
-         return call(Self,...)
-      end))
-   elseif nfall then
-      nfall = false
-   end
-end
-})
-
-ps:addToggle({title = 'Mod Check', callback = function(state)
-   mcheck = state
-   if not mcheck then
-      m = game:service'Players'.PlayerAdded:Connect(function(snitch)
-        if snitch:IsInGroup(5212858) then
-            ui:Notify({title = snitch.Name..'is a snitch!', text = 'I would leave if I were you.'})
-        end
-    end)
-   else
-      m:Disconnect()
+ps:addToggle('No Fall', nil, function(state)
+    if not nfall then
+        nfall = true
+        local Closure,Caller = hide_me or newcclosure,checkcaller or is_protosmasher_caller or Cer.isCerus
+        local call
+        call = hookmetamethod(game,'__namecall', newcclosure(function(Self,...)
+            local args = {...}
+            if Caller() then return call(Self,...) end
+            local method = getnamecallmethod()
+            if method == 'FireServer' and nfall and typeof(args[1]) == 'number' then
+                return
+            elseif method == 'FindFirstChild' and args[1] == 'BodyVelocity' then
+                return
+            end
+            return call(Self,...)
+        end))
+    elseif nfall then
+        nfall = false
     end
-end
-})
+end)
 
-vp = ui:addPage({title = 'Visuals', icon = 6523858394})
-vs = vp:addSection({title = 'Visual'})
-vn = vp:addSection({title = 'Notify'})
-vs1 = vp:addSection({title = 'Stat Check'})
+ps:addSlider('Speed',  100, 50, 200, function(speed)
+    flyspeed = speed
+end)
 
-vs:addToggle({title = 'Player ESP', callback = function(eval)
+vp = ui:addPage('Visuals', 6523858394)
+vs = vp:addSection('ESP')
+vl = vp:addSection('Lighting')
+vn = vp:addSection('Notify')
+vc = vp:addSection('Stats')
+
+vs:addToggle('Players', nil, function(eval)
     ESPenabled = eval
     if not ESPenabled then
-        for i, c in pairs(COREGUI:GetChildren()) do
+        esp = false
+        for i, c in pairs(core:GetChildren()) do
             if string.sub(c.Name, -4) == '_ESP' then
                 c:Destroy()
             end
-        end    
+        end
     else
+        esp = true
         for _, v in pairs(game.Players:GetChildren()) do
             if v.ClassName == 'Player' and v.Name ~= client.Name then
                 ESP(v)
             end
         end
     end
-end
-})
+end)
 
-vs:addToggle({title = 'Full Bright', callback = function(state)
-    bloop = state
-    if not bloop then
-        if brightloop then
-            brightloop:Disconnect()
-        end
-        bloop = true
-        local brightloop
-        function Bright()
-          lighting.Brightness = 2
-          lighting.ClockTime = 14
-          lighting.FogEnd = 100000
-          lighting.GlobalShadows = false
-          lighting.OutdoorAmbient = Color3.fromRGB(125, 125, 125)
-       end
-   else
-       bloop = false
-       brightloop = game:service'RunService'.RenderStepped:Connect(Bright)
-    end
-end
-})
+vl:addButton('Day', function()
+    lighting.ClockTime = 14
+end)
 
-vs:addButton({title = 'No Fog', callback = function()
+vl:addButton('Night', function()
+    lighting.ClockTime = 0
+end)
+
+vl:addButton('Fog', function()
    lighting.FogEnd = 100000
 	for i,v in pairs(lighting:GetDescendants()) do
 		if v:IsA'Atmosphere' then
 			v:Destroy()
 		end
 	end
-end
-})
+end)
 
-vs:addButton({title = 'Day', callback = function()
-    lighting.ClockTime = 14
-end
-})
-
-vs:addButton({title = 'Night', callback = function()
-    lighting.ClockTime = 0
-end
-})
-
-vn:addToggle({title = 'Player', callback = function(val)
-   local wplr
-   if not closeplayer then
-      closeplayer = true
-      while closeplayer do
-         task.wait(1)
-         for _, plr in pairs(game.Players:GetChildren()) do
-            if plr.Name ~= client.Name and plr.Name ~= wplr and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
-               pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
-               if pos <= 500 and not magpos and not notify then
-                  ui:Notify({title = plr.Name..' is Near!', text = 'Current Distance: '..pos})
-                  notify = true
-                  magpos = true
-                  task.wait()
-               end
-               if pos > 500 and magpos and not notify then
-                   magpost = false
-               end
-               if pos > 500 and notify then
-                  notify = false
-               end
+vn:addToggle('Mods', nil, function(state)
+    if not mcheck then
+        m = game:service'Players'.PlayerAdded:Connect(function(snitch)
+            if snitch:IsInGroup(5212858) then
+                ui:Notify(snitch.Name..'is a snitch!', 'I would leave if I were you.')
             end
-         end
-      end
-   elseif closeplayer then
-   closeplayer = false
+        end)
+    else
+        m:Disconnect()
     end
-end
-})
+end)
 
-vn:addTextbox({title = 'Whitelist', default = 'Awaiting Input...', callback = function(value, focusLost)
-    if (focusLost) then
-        wplr = value
+vn:addToggle('Players', nil, function(val)
+    if not closeplayer then
+        closeplayer = true
+        while closeplayer do
+            task.wait(1)
+            for _, plr in pairs(game.Players:GetChildren()) do
+                if plr.Name ~= client.Name and plr.Character and getRoot(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and getRoot(char) and char:FindFirstChildOfClass'Humanoid' then 
+                    pos = math.floor((getRoot(char).Position - getRoot(plr.Character).Position).magnitude)
+                    if pos <= 500 and not magpos and not notify then
+                        ui:Notify(plr.Name..' is Near!', 'Current Distance: '..pos)
+                        notify = true
+                        magpos = true
+                        task.wait()
+                    end
+                    if pos > 500 and magpos and not notify then
+                        magpost = false
+                    end
+                    if pos > 500 and notify then
+                        notify = false
+                    end
+                end
+            end
+        end
+    elseif closeplayer then
+        closeplayer = false
     end
-end
-})
+end)
 
-vn:addToggle({title = 'Hunger', callback = function(val)
+vn:addToggle('Hunger', nil, function(val)
     if not hunger then
         hunger = true
         char.Stomach:GetPropertyChangedSignal'Value':connect(function()
             if hunger and char.Stomach.Value <= 45 and not hnotify then
                 hnotify = true
-                ui:Notify({title = 'Hunger: Low', text = 'Eat Some Food!'})
+                ui:Notify('Hunger: Low', 'Eat Some Food!')
                 wait(1)
             end
             if hunger and char.Stomach.Value > 45 and hnotify then
@@ -338,16 +333,15 @@ vn:addToggle({title = 'Hunger', callback = function(val)
     elseif hunger then
         hunger = false
     end
-end
-})
+end)
 
-vn:addToggle({title = 'Thirst', callback = function(val)
+vn:addToggle('Thirst', nil, function(val)
     if not thirst then
         thirst = true
         char.Water:GetPropertyChangedSignal'Value':connect(function()
             if thirst and char.Water.Value <= 45 and not tnotify then
                 tnotify = true
-                ui:Notify({title = 'Thirst: Low', text = 'Drink Some Water!'})
+                ui:Notify('Thirst: Low', 'Drink Some Water!')
                 wait(1)
             end
             if thirst and char.Water.Value > 45 and tnotify then
@@ -357,41 +351,107 @@ vn:addToggle({title = 'Thirst', callback = function(val)
     elseif thirst then
         thirst = false
     end
-end
-})
+end)
 
-vs1:addTextbox({title = 'Name:', default = 'Awaiting Input...', callback = function(value, focusLost)
+vc:addTextbox('Name:', 'Awaiting Input...', function(value, focusLost)
     name = value
     if (focusLost) then
-    ui:Notify({title = 'Name: '..name, text = 'Ether: '..math.floor(workspace.Live[name].Ether.MaxValue)..' | Reservoir: '..math.floor(workspace.Live[name].Reservoir.MaxValue)..' | Posture: '..math.floor(workspace.Live[name].BreakMeter.Value)..' | Agility: '..math.floor(workspace.Live[name].Agility.Value)..' | Blood: '..math.floor(workspace.Live[name].Blood.Value)})
+    ui:Notify('Name: '..name, 'Ether: '..math.floor(workspace.Live[name].Ether.MaxValue)..' | Reservoir: '..math.floor(workspace.Live[name].Reservoir.MaxValue)..' | Posture: '..math.floor(workspace.Live[name].BreakMeter.Value)..' | Agility: '..math.floor(workspace.Live[name].Agility.Value)..' | Blood: '..math.floor(workspace.Live[name].Blood.Value))
     end
-end
-})
+end)
 
-sp = ui:addPage({title = 'Settings', icon = 2484556379})
-ss = sp:addSection({title = 'UI'})
-sv = sp:addSection({title = 'Theme'})
+tp = ui:addPage('Teleports', 10507357657)
+ts = tp:addSection('Locations')
 
-ss:addKeybind({title = 'Toggle', key = Enum.KeyCode.RightControl, callback = function()
+ts:addButton('Etris', function()
+    Tween(CFrame.new(2355, 153, -4171))
+end)
+
+ts:addButton('Erisia', function()
+    Tween(CFrame.new(58, 153, -49))
+end)
+
+ts:addButton('Bandit Camp', function()
+    Tween(CFrame.new(965, 436, -27))
+end)
+
+ts:addButton('Sharko Cave', function()
+    Tween(CFrame.new(1150, 397, -720))
+end)
+
+ts:addButton('Golems', function()
+    Tween(CFrame.new(1319, 664, 1583))
+end)
+
+ts:addButton('Duke', function()
+    Tween(CFrame.new(1394, 650, 2695))
+end)
+
+ts:addButton('Isle of Vigils', function()
+    Tween(CFrame.new(1150, 397, -720))
+end)
+
+ts:addButton('Isle Trainers', function()
+    Tween(CFrame.new(-1979, 176, 2770))
+end)
+
+ts:addButton('Summer Isles', function()
+    Tween(CFrame.new(-4536, 110, 677))
+end)
+
+ts:addButton('Songseeker', function()
+    Tween(CFrame.new(-4460, 189, -3263))
+end)
+
+ts:addButton('Minitrysa', function()
+    Tween(CFrame.new(-4413, 189, -5946))
+end)
+
+ts:addButton('Trial', function()
+    Tween(CFrame.new(-4436, 129, -6399))
+end)
+
+ts:addButton('Starswept', function()
+    Tween(CFrame.new(-7337, 654, -510))
+end)
+
+ts:addButton('Fort Merit', function()
+    Tween(CFrame.new(-8827, 565, 2860))
+end)
+
+ts:addButton('Hive', function()
+    Tween(CFrame.new(-10416, 1018, -402))
+end)
+
+ts:addButton('Primadon', function()
+    Tween(CFrame.new(-9832, 333, -6488))
+end)
+
+ts:addButton('Ferry Man', function()
+    Tween(CFrame.new(-4269, 101, -11529))
+end)
+
+ts:addButton('Void Sea', function()
+    Tween(CFrame.new(-4421.81738, 0.134027243, -10340.2676, 0.841053665, 3.31898917e-08, 0.540951669, -1.62938214e-08, 1, -3.60215395e-08, -0.540951669, 2.14818776e-08, 0.841053665))
+end)
+
+
+sp = ui:addPage('Settings', 2484556379)
+ss = sp:addSection('UI')
+sv = sp:addSection('Theme')
+
+ss:addKeybind('Toggle', Enum.KeyCode.RightControl, function()
     ui:toggle()
-end
-})
+end)
 
-ss:addButton({title = 'Close', callback = function()
-    COREGUI['Coffee Hub']:Destroy()
-end
-})
-
-ss:addButton({title = 'Bindings', callback = function()
-    ui:Notify({title = 'Default Bindings:', text = 'Fly: F4 | Noclip: F5 | Toggle: RightControl'})
-end
-})
+ss:addButton('Close', function()
+    core:WaitForChild'Midwoke':Destroy()
+end)
 
 for theme, color in pairs(themes) do
-    sv:addColorPicker({title = theme, default = color, callback = function(color3)
-        ui:setTheme({theme = theme, color3 = color3})
-        end
-    })
+    sv:addColorPicker(theme, color, function(color3)
+        ui:setTheme(theme, color3)
+    end)
 end
 
 game:service'RunService'.Stepped:connect(function()
@@ -406,6 +466,23 @@ game:service'RunService'.Stepped:connect(function()
     end)
 end)
 
+game.Players.PlayerRemoving:Connect(function(player)
+    if esp then
+        for i, v in pairs(core:GetChildren()) do
+            if v.Name == player.Name..'_ESP' then
+                v:Destroy()
+            end
+        end
+    end
+end)
+
+game.Players.PlayerAdded:Connect(function(plr)
+    if esp then
+        repeat wait(1) until plr.Character and getRoot(plr.Character)
+		ESP(plr)
+    end
+end)
+
 mouse.KeyDown:connect(function(key)
     if key:lower():match'w' then
         ctrl.f = 1
@@ -417,6 +494,7 @@ mouse.KeyDown:connect(function(key)
         ctrl.r = 1
     end
 end)
+
 mouse.KeyUp:connect(function(key)
     if key:lower():match'w' then
         ctrl.f = 0
