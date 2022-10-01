@@ -10,7 +10,7 @@ local ES = VP:addSection('ESP')
 local LS = VP:addSection('Lighting')
 local NS = VP:addSection('Notify')
 local SS = VP:addSection('Stats')
-local GS = TP:addSection('Locations')
+local MP = TP:addSection('Locations')
 local US = SP:addSection('UI')
 local TS = SP:addSection('Theme')
 
@@ -31,6 +31,7 @@ getgenv().Esp = false
 getgenv().Tracer = false
 getgenv().Mods = false
 getgenv().Players = false
+getgenv().EnemyEsp = false
 getgenv().Notify = false
 getgenv().Hunger = false
 getgenv().HNotify = false
@@ -46,6 +47,7 @@ local name, index, nindex = gamememe.__namecall, gamememe.__index, gamememe.__ne
 local client = game:GetService'Players'.LocalPlayer
 local char = client.Character or client.CharacterAdded:Wait(1)
 local hrp = char.HumanoidRootPart
+local run = game:GetService'RunService'
 local mouse = client:GetMouse()
 local core = game:GetService'CoreGui'
 local cam = workspace.CurrentCamera
@@ -87,6 +89,179 @@ function Root(character)
 	return rootPart
 end
 
+function Shader()
+    for _, v in pairs(Lighting:GetChildren()) do
+        v:Destroy()
+    end
+    
+    Atmosphere = Instance.new('Atmosphere', Lighting)
+    Bloom = Instance.new('BloomEffect', Lighting)
+    ColorCorrection = Instance.new('ColorCorrectionEffect', Lighting)
+    Depth = Instance.new('DepthOfFieldEffect', Lighting)
+    CC = Instance.new('ColorCorrectionEffect', Lighting)
+    CCE = Instance.new('ColorCorrectionEffect', Lighting)
+    SunRay = Instance.new('SunRaysEffect', Lighting)
+    Blur = Instance.new('BlurEffect', Lighting)
+    MotionBlur = Instance.new('BlurEffect', cam)
+    
+    sethiddenproperty(workspace.Terrain, 'Decoration', true)
+    sethiddenproperty(Lighting, 'Technology', 'ShadowMap')
+    
+    Lighting.Ambient = Color3.fromRGB(35, 35, 35)
+    Lighting.Brightness = .5
+    Lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
+    Lighting.ColorShift_Top = Color3.fromRGB(255, 245, 235)
+    Lighting.EnvironmentDiffuseScale = 0.105
+    Lighting.EnvironmentSpecularScale = 0.525
+    Lighting.GlobalShadows = true
+    Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 35)
+    Lighting.ShadowSoftness = 0.05
+    Lighting.GeographicLatitude = -15.525
+    Lighting.ExposureCompensation = 0.1
+    
+    Atmosphere.Density = 0.21
+    Atmosphere.Offset = 1
+    Atmosphere.Color = Color3.fromRGB(215, 255, 250)
+    Atmosphere.Decay = Color3.fromRGB(95, 60, 15)
+    Atmosphere.Glare = 0.63
+    
+    Bloom.Enabled = true
+    Bloom.Intensity = 0.2
+    Bloom.Size = 1900
+    Bloom.Threshold = 0.915
+    
+    ColorCorrection.Brightness = 0.1
+    ColorCorrection.Contrast = 0.2
+    ColorCorrection.Enabled = true
+    ColorCorrection.Saturation = 0.3
+    ColorCorrection.TintColor = Color3.fromRGB(255, 245, 240)
+    
+    Depth.Enabled = true
+    Depth.FarIntensity = 0.7
+    Depth.FocusDistance = 0.7
+    Depth.InFocusRadius = 250
+    Depth.NearIntensity = 0.5
+    
+    CC.Brightness = 0.01
+    CC.Contrast = -0.05
+    CC.Saturation = 0
+    CC.Enabled = true
+    CC.TintColor = Color3.fromRGB(255, 245, 235)
+    
+    CCE.Brightness = 0.2
+    CCE.Contrast = 0.45
+    CCE.Saturation = -0.1
+    CCE.Enabled = true
+    CCE.TintColor = Color3.fromRGB(255, 255, 255)
+    
+    SunRay.Enabled = true
+    SunRay.Intensity = 0.084
+    SunRay.Spread = 0.364
+    
+    Blur.Enabled = true
+    Blur.Size = 2
+    
+    BlurAmount = 15
+    BlurAmplifier = 5
+    LastVector = cam.CFrame.LookVector
+    
+    workspace.Changed:Connect(function(property)
+        if property == 'CurrentCamera' then
+            if MotionBlur and MotionBlur.Parent then
+                MotionBlur.Parent = cam
+            else
+                MotionBlur = Instance.new('BlurEffect', cam)
+            end
+        end
+    end)
+    
+    run.Stepped:Connect(function()
+        Lighting.ClockTime = 11
+    end)
+    
+    run.Heartbeat:Connect(function()
+        if not MotionBlur or MotionBlur.Parent == nil then
+            MotionBlur = Instance.new('BlurEffect', cam)
+        end
+        Mag = (cam.CFrame.LookVector - LastVector).Magnitude
+        MotionBlur.Size = math.abs(Mag) * BlurAmount * BlurAmplifier / 2
+        LastVector = cam.CFrame.LookVector
+    end)
+end
+
+function EnemyESP(enemy)
+    task.spawn(function()
+        for i, v in pairs(core:GetChildren()) do
+            if v.Name == enemy.Name..'!ESP' then
+                v:Destroy()
+            end
+        end
+        if enemy and enemy.Name ~= client.Name and not core:FindFirstChild(enemy.Name..'!ESP') then
+            local EnemyHolder = Instance.new'Folder'
+            EnemyHolder.Name = enemy.Name..'!ESP'
+            EnemyHolder.Parent = core
+            repeat wait(1) until enemy and Root(enemy) and enemy:FindFirstChild'Head'
+            for b, n in pairs(enemy:GetChildren()) do
+                if n:IsA'Part' then
+                    local Box = Instance.new'BoxHandleAdornment'
+                    Box.Name = enemy.Name
+                    Box.Parent = EnemyHolder
+                    Box.Adornee = n
+                    Box.AlwaysOnTop = true
+                    Box.ZIndex = 10
+                    Box.Size = n.Size
+                    Box.Transparency = 1
+                end
+            end
+            if enemy and enemy:FindFirstChild'Head' then
+                local Board = Instance.new'BillboardGui'
+                local Label = Instance.new'TextLabel'
+                Board.Adornee = enemy.Head
+                Board.Name = enemy.Name
+                Board.Parent = EnemyHolder
+                Board.Size = UDim2.new(0, 100, 0, 150)
+                Board.StudsOffset = Vector3.new(0, 1, 0)
+                Board.AlwaysOnTop = true
+                Label.Parent = Board
+                Label.BackgroundTransparency = 1
+                Label.Position = UDim2.new(0, 0, 0, -50)
+                Label.Size = UDim2.new(0, 100, 0, 100)
+                Label.TextSize = 8
+                Label.TextColor3 = Color3.new(255, 255, 255)
+                Label.TextStrokeTransparency = 0
+                Label.TextYAlignment = Enum.TextYAlignment.Bottom
+                Label.Text = ''
+                Label.ZIndex = 10
+                local ELoop
+                local EAdded
+                EAdded = enemy.ChildAdded:Connect(function()
+                    if EnemyEsp then
+                        ELoop:Disconnect()
+                        EnemyHolder:Destroy()
+                        repeat wait(1) until Root(enemy) and enemy:FindFirstChildOfClass'Humanoid'
+                        EnemyESP(enemy)
+                        EAdded:Disconnect()
+                    else
+                        EAdded:Disconnect()
+                    end
+                end)
+                local function EnemyLoop()
+                    if core:FindFirstChild(enemy.Name..'!ESP') then
+                        if enemy and Root(enemy) and enemy:FindFirstChildOfClass'Humanoid' and client.Character and Root(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
+                            local pos = math.floor((Root(client.Character).Position - Root(enemy).Position).magnitude)
+                            Label.Text = 'Health: '..Round(enemy:FindFirstChildOfClass'Humanoid'.Health, 1)..' | '..pos
+                        end
+                    else
+                        EAdded:Disconnect()
+                        ELoop:Disconnect()
+                    end
+                end
+                ELoop = game:GetService'RunService'.RenderStepped:Connect(EnemyLoop)
+            end
+        end
+    end)
+end
+
 function ESP(plr)
 	task.spawn(function()
 		for i,v in pairs(core:GetChildren()) do
@@ -100,7 +275,7 @@ function ESP(plr)
 			Holder.Name = plr.Name..'_ESP'
 			Holder.Parent = core
 			repeat wait(1) until plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
-			for b,n in pairs (plr.Character:GetChildren()) do
+			for b, n in pairs (plr.Character:GetChildren()) do
 				if n:IsA'BasePart' then
 					local a = Instance.new'BoxHandleAdornment'
 					a.Name = plr.Name
@@ -134,7 +309,7 @@ function ESP(plr)
 				local Loop
 				local Added
 				Added = plr.CharacterAdded:Connect(function()
-					if esp then
+					if Esp then
 						Loop:Disconnect()
 						Holder:Destroy()
 						repeat wait(1) until Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
@@ -271,7 +446,6 @@ end)
 ES:addToggle('Players', nil, function(state)
     if not Esp then
         Esp = true
-        esp = true
         for _, plr in pairs(game:GetService'Players':GetChildren()) do
             if plr.ClassName == 'Player' and plr.Name ~= client.Name then
                 ESP(plr)
@@ -279,13 +453,34 @@ ES:addToggle('Players', nil, function(state)
         end
     else
         Esp = false
-        esp = false
         for i, c in pairs(core:GetChildren()) do
             if string.sub(c.Name, -4) == '_ESP' then
                 c:Destroy()
             end
         end
     end
+end)
+
+ES:addToggle('Enemies', nil, function(state)
+    if not EnemyEsp then
+        EnemyEsp = true
+        for _, enemy in pairs(workspace.Live:GetChildren()) do
+            if enemy:FindFirstChild'SpawnCF' and enemy.Name ~= client.Name then
+                EnemyESP(enemy)
+            end
+        end
+    else
+        EnemyEsp = false
+        for i, c in pairs(core:GetChildren()) do
+            if string.sub(c.Name, -4) == '!ESP' then
+                c:Destroy()
+            end
+        end
+    end
+end)
+
+LS:addButton('Shaders', function()
+    Shader()
 end)
 
 LS:addButton('Day', function()
@@ -308,6 +503,18 @@ end)
 NS:addToggle('Mods', nil, function(state)
     if not Mods then
         Mods = true
+        for _, snitch in pairs(game:GetService'Players':GetChildren()) do
+            if snitch:IsInGroup(5212858) then
+                game:GetService'StarterGui':SetCore('SendNotification', {
+                    Title = snitch.Name..' Is a Snitch!',
+                    Text = 'Would you like to leave?',
+                    Duration = 100,
+                    Callback = data,
+                    Button1 = 'Yes',
+                    Button2 = 'No'
+                })
+            end
+        end
         Check = game:GetService'Players'.PlayerAdded:Connect(function(snitch)
             if snitch:IsInGroup(5212858) then
                 game:GetService'StarterGui':SetCore('SendNotification', {
@@ -334,12 +541,12 @@ NS:addToggle('Players', nil, function(val)
             for _, plr in pairs(game.Players:GetChildren()) do
                 if plr.Name ~= client.Name and plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and Root(char) and char:FindFirstChildOfClass'Humanoid' then 
                     pos = math.floor((Root(char).Position - Root(plr.Character).Position).magnitude)
-                    if pos <= 500  and not Notify then
+                    if pos <= 500 and not Notify then
+                        UI:Notify(plr.Name..' is Near!', 'Current Distance: '..pos)
                         Notify = true
                         task.wait(1)
-                        UI:Notify(plr.Name..' is Near!', 'Current Distance: '..pos)
                     end
-                    if pos > 500 then
+                    if pos > 500 and Notify then
                         Notify = false
                     end
                 end
@@ -347,6 +554,7 @@ NS:addToggle('Players', nil, function(val)
         end
     else
         Players = false
+        Notify = false
     end
 end)
 
@@ -365,6 +573,7 @@ NS:addToggle('Hunger', nil, function(val)
         end)
     else
         Hunger = false
+        HNotify = false
     end
 end)
 
@@ -383,6 +592,7 @@ NS:addToggle('Thirst', nil, function(val)
         end)
     else
         Thirst = false
+        TNotify = false
     end
 end)
 
@@ -393,75 +603,75 @@ SS:addTextbox('Name:', 'Awaiting Input...', function(value, focusLost)
     end
 end)
 
-GS:addButton('Etris', function()
+MP:addButton('Etris', function()
     Tween(CFrame.new(2355, 153, -4171))
 end)
 
-GS:addButton('Erisia', function()
+MP:addButton('Erisia', function()
     Tween(CFrame.new(58, 153, -49))
 end)
 
-GS:addButton('Bandit Camp', function()
+MP:addButton('Bandit Camp', function()
     Tween(CFrame.new(965, 436, -27))
 end)
 
-GS:addButton('Sharko Cave', function()
+MP:addButton('Sharko Cave', function()
     Tween(CFrame.new(1150, 397, -720))
 end)
 
-GS:addButton('Golems', function()
+MP:addButton('Golems', function()
     Tween(CFrame.new(1319, 664, 1583))
 end)
 
-GS:addButton('Duke', function()
+MP:addButton('Duke', function()
     Tween(CFrame.new(1394, 650, 2695))
 end)
 
-GS:addButton('Isle of Vigils', function()
+MP:addButton('Isle of Vigils', function()
     Tween(CFrame.new(1150, 397, -720))
 end)
 
-GS:addButton('Isle Trainers', function()
+MP:addButton('Isle Trainers', function()
     Tween(CFrame.new(-1979, 176, 2770))
 end)
 
-GS:addButton('Summer Isles', function()
+MP:addButton('Summer Isles', function()
     Tween(CFrame.new(-4536, 110, 677))
 end)
 
-GS:addButton('Songseeker', function()
+MP:addButton('Songseeker', function()
     Tween(CFrame.new(-4460, 189, -3263))
 end)
 
-GS:addButton('Minitrysa', function()
+MP:addButton('Minitrysa', function()
     Tween(CFrame.new(-4413, 189, -5946))
 end)
 
-GS:addButton('Trial', function()
+MP:addButton('Trial', function()
     Tween(CFrame.new(-4436, 129, -6399))
 end)
 
-GS:addButton('Starswept', function()
+MP:addButton('Starswept', function()
     Tween(CFrame.new(-7337, 654, -510))
 end)
 
-GS:addButton('Fort Merit', function()
+MP:addButton('Fort Merit', function()
     Tween(CFrame.new(-8827, 565, 2860))
 end)
 
-GS:addButton('Hive', function()
+MP:addButton('Hive', function()
     Tween(CFrame.new(-10416, 1018, -402))
 end)
 
-GS:addButton('Primadon', function()
+MP:addButton('Primadon', function()
     Tween(CFrame.new(-9832, 333, -6488))
 end)
 
-GS:addButton('Ferry Man', function()
+MP:addButton('Ferry Man', function()
     Tween(CFrame.new(-4269, 101, -11529))
 end)
 
-GS:addButton('Void Sea', function()
+MP:addButton('Void Sea', function()
     Tween(CFrame.new(-4421.81738, 0.134027243, -10340.2676, 0.841053665, 3.31898917e-08, 0.540951669, -1.62938214e-08, 1, -3.60215395e-08, -0.540951669, 2.14818776e-08, 0.841053665))
 end)
 
@@ -478,7 +688,6 @@ for theme, color in pairs(Themes) do
         UI:setTheme(theme, color3)
     end)
 end
-
 
 game:GetService'RunService'.Stepped:connect(function()
     pcall(function()
@@ -506,6 +715,25 @@ game:GetService'Players'.PlayerAdded:Connect(function(player)
     if Esp then
         repeat wait(1) until player.Character and Root(player.Character)
 		ESP(player)
+    end
+end)
+
+workspace.Live.ChildRemoved:Connect(function(enemy)
+    if EnemyEsp then
+        for _, ui in pairs(core:GetChildren()) do
+            if ui.Name == enemy.Name..'!ESP' then
+                ui:Destroy()
+            end
+        end
+    end
+end)
+
+workspace.Live.ChildAdded:Connect(function(enemy)
+    if EnemyEsp then
+        if enemy:WaitForChild'SpawnCF' then
+            repeat wait(1) until enemy and Root(enemy)
+            EnemyESP(enemy)
+        end
     end
 end)
 
