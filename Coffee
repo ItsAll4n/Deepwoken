@@ -227,7 +227,7 @@ function EnemyESP(enemy)
                 Label.Position = UDim2.new(0, 0, 0, -50)
                 Label.Size = UDim2.new(0, 100, 0, 100)
                 Label.TextSize = 8
-                Label.TextColor3 = Color3.new(255, 255, 255)
+                Label.TextColor3 = Color3.new(255, 0, 0)
                 Label.TextStrokeTransparency = 0
                 Label.TextYAlignment = Enum.TextYAlignment.Bottom
                 Label.Text = ''
@@ -248,8 +248,7 @@ function EnemyESP(enemy)
                 local function EnemyLoop()
                     if core:FindFirstChild(enemy.Name..'!ESP') then
                         if enemy and Root(enemy) and enemy:FindFirstChildOfClass'Humanoid' and client.Character and Root(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
-                            local pos = math.floor((Root(client.Character).Position - Root(enemy).Position).magnitude)
-                            Label.Text = 'Health: '..Round(enemy:FindFirstChildOfClass'Humanoid'.Health, 1)..' | '..pos
+                            Label.Text = 'Health: '..Round(enemy:FindFirstChildOfClass'Humanoid'.Health, 1)..''
                         end
                     else
                         EAdded:Disconnect()
