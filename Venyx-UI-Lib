@@ -466,7 +466,7 @@ do
 		
 		self.toggling = true
 		
-		local container = self.container.Main
+		local container = self.container:WaitForChild'Main'
 		local topbar = container.TopBar
 		
 		if self.position then
