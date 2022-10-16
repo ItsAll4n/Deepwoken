@@ -1,10 +1,11 @@
 local Lib = loadstring(game:HttpGet'https://raw.githubusercontent.com/zxciaz/VenyxUI/main/Reuploaded')()
-local UI = Lib.new('Midwoken', 5013109572)
+local UI = Lib.new('Crack Is Good', 5013109572)
 local CP = UI:addPage('Client', 5012544693)
 local VP = UI:addPage('Visuals', 6523858394)
 local TP = UI:addPage('Teleports', 10507357657)
 local SP = UI:addPage('Settings', 2484556379)
 local PS = CP:addSection('Personal')
+local RS = CP:addSection('Important')
 local AS = CP:addSection('Speed')
 local ES = VP:addSection('ESP')
 local LS = VP:addSection('Lighting')
@@ -45,8 +46,8 @@ local Closure, Caller = hide_me or newcclosure, checkcaller or is_protosmasher_c
 local writeable = setreadonly(gamememe, false) or make_writeable(gamememe)
 local name, index, nindex = gamememe.__namecall, gamememe.__index, gamememe.__newindex
 local client = game:GetService'Players'.LocalPlayer
-local char = client.Character or client.CharacterAdded:Wait(1)
-local hrp = char.HumanoidRootPart
+local char = workspace.Live[client.Name] or client.Character or client.CharacterAdded:Wait(1)
+local hrp = char:FindFirstChild'HumanoidRootPart' or char:WaitForChild'HumanoidRootPart'
 local run = game:GetService'RunService'
 local mouse = client:GetMouse()
 local core = game:GetService'CoreGui'
@@ -85,7 +86,7 @@ function Round(num, decimal)
 end
 
 function Root(character)
-    local rootPart = character:FindFirstChild'HumanoidRootPart' or character:FindFirstChild'Torso' or character:FindFirstChild'UpperTorso'
+    local rootPart = character:WaitForChild'HumanoidRootPart' or character:WaitForChild'Torso' or character:WaitForChild'UpperTorso'
 	return rootPart
 end
 
@@ -200,7 +201,7 @@ function EnemyESP(enemy)
             local EnemyHolder = Instance.new'Folder'
             EnemyHolder.Name = enemy.Name..'!ESP'
             EnemyHolder.Parent = core
-            repeat wait(1) until enemy and Root(enemy) and enemy:FindFirstChild'Head'
+            repeat task.wait(1) until enemy and Root(enemy) and enemy:FindFirstChild'Head'
             for b, n in pairs(enemy:GetChildren()) do
                 if n:IsA'Part' then
                     local Box = Instance.new'BoxHandleAdornment'
@@ -238,7 +239,7 @@ function EnemyESP(enemy)
                     if EnemyEsp then
                         ELoop:Disconnect()
                         EnemyHolder:Destroy()
-                        repeat wait(1) until Root(enemy) and enemy:FindFirstChildOfClass'Humanoid'
+                        repeat task.wait(1) until Root(enemy) and enemy:FindFirstChildOfClass'Humanoid'
                         EnemyESP(enemy)
                         EAdded:Disconnect()
                     else
@@ -268,12 +269,12 @@ function ESP(plr)
 				v:Destroy()
 			end
 		end
-		wait()
+		task.wait()
 		if plr.Character and plr.Name ~= client.Name and not core:FindFirstChild(plr.Name..'_ESP') then
 			local Holder = Instance.new'Folder'
 			Holder.Name = plr.Name..'_ESP'
 			Holder.Parent = core
-			repeat wait(1) until plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+			repeat task.wait(1) until plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
 			for b, n in pairs (plr.Character:GetChildren()) do
 				if n:IsA'BasePart' then
 					local a = Instance.new'BoxHandleAdornment'
@@ -311,7 +312,7 @@ function ESP(plr)
 					if Esp then
 						Loop:Disconnect()
 						Holder:Destroy()
-						repeat wait(1) until Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+						repeat task.wait(1) until Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
 						ESP(plr)
 						Added:Disconnect()
 					else
@@ -339,7 +340,7 @@ function Tween(location)
     spawn(function()
         if game.PlaceId ~= 5735553160 and (hrp.Position - Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)).magnitude > 200 then
             repeat
-                wait()
+                task.wait()
                 hrp.Position = hrp.Position - Vector3.new(0, 5, 0)
             until hrp.Position.Y <= 5
         end
@@ -348,12 +349,12 @@ function Tween(location)
             check = Vector3.new(location.Position.X, 2, location.Position.Z)
         end
         repeat
-            wait()
+            task.wait()
             local dir = check - hrp.Position
             hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
         until (hrp.Position - check).magnitude <= 10
         repeat
-            wait()
+            task.wait()
             local dir = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z) - hrp.Position
             hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
         until hrp.Position.Y >= location.Y
@@ -365,7 +366,7 @@ PS:addKeybind('Fly', Enum.KeyCode.F4, function()
         Fly = true
         spawn(function()
             pcall(function()
-                repeat wait()
+                repeat task.wait()
                     if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
                         bv = Instance.new('BodyVelocity', hrp)
                         bv.maxForce = Vector3.new(4000000, 4000000, 4000000)
@@ -432,6 +433,10 @@ PS:addToggle('No Fall', nil, function(state)
     elseif NoFall then
         NoFall = false
     end
+end)
+
+RS:addButton('Respawn', function()
+    char:Destroy()
 end)
 
 AS:addSlider('Fly',  100, 50, 200, function(num)
@@ -535,8 +540,7 @@ end)
 NS:addToggle('Players', nil, function(val)
     if not Players then
         Players = true
-        while Players do
-            task.wait(1)
+        hrp:GetPropertyChangedSignal'Position':connect(function()
             for _, plr in pairs(game.Players:GetChildren()) do
                 if plr.Name ~= client.Name and plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and Root(char) and char:FindFirstChildOfClass'Humanoid' then 
                     pos = math.floor((Root(char).Position - Root(plr.Character).Position).magnitude)
@@ -550,7 +554,7 @@ NS:addToggle('Players', nil, function(val)
                     end
                 end
             end
-        end
+        end)
     else
         Players = false
         Notify = false
@@ -564,7 +568,7 @@ NS:addToggle('Hunger', nil, function(val)
             if Hunger and char.Stomach.Value <= 45 and not HNotify then
                 HNotify = true
                 UI:Notify('Hunger: Low', 'Eat Some Food!')
-                wait(1)
+                task.wait(1)
             end
             if Hunger and char.Stomach.Value > 45 and HNotify then
                 HNotify = false
@@ -583,7 +587,7 @@ NS:addToggle('Thirst', nil, function(val)
             if Thirst and char.Water.Value <= 45 and not TNotify then
                 TNotify = true
                 UI:Notify('Thirst: Low', 'Drink Some Water!')
-                wait(1)
+                task.wait(1)
             end
             if Thirst and char.Water.Value > 45 and TNotify then
                 TNotify = false
@@ -712,7 +716,7 @@ end)
 
 game:GetService'Players'.PlayerAdded:Connect(function(player)
     if Esp then
-        repeat wait(1) until player.Character and Root(player.Character)
+        repeat task.wait(1) until player.Character and Root(player.Character)
 		ESP(player)
     end
 end)
@@ -730,7 +734,7 @@ end)
 workspace.Live.ChildAdded:Connect(function(enemy)
     if EnemyEsp then
         if enemy:WaitForChild'SpawnCF' then
-            repeat wait(1) until enemy and Root(enemy)
+            repeat task.wait(1) until enemy and Root(enemy)
             EnemyESP(enemy)
         end
     end
