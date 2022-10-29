@@ -1,5 +1,5 @@
 local Lib = loadstring(game:HttpGet'https://raw.githubusercontent.com/zxciaz/VenyxUI/main/Reuploaded')()
-local UI = Lib.new('Crack Is Good', 5013109572)
+local UI = Lib.new('Midwoken', 5013109572)
 local CP = UI:addPage('Client', 5012544693)
 local VP = UI:addPage('Visuals', 6523858394)
 local TP = UI:addPage('Teleports', 10507357657)
@@ -9,6 +9,7 @@ local RS = CP:addSection('Important')
 local AS = CP:addSection('Speed')
 local ES = VP:addSection('ESP')
 local LS = VP:addSection('Lighting')
+local SSS = VP:addSection('Shaders')
 local NS = VP:addSection('Notify')
 local SS = VP:addSection('Stats')
 local MP = TP:addSection('Locations')
@@ -88,6 +89,61 @@ end
 function Root(character)
     local rootPart = character:WaitForChild'HumanoidRootPart' or character:WaitForChild'Torso' or character:WaitForChild'UpperTorso'
 	return rootPart
+end
+
+function Spoopy()
+    for _, v in pairs(Lighting:GetChildren()) do
+        v:Destroy()
+    end
+    
+    Atmosphere = Instance.new('Atmosphere', Lighting)
+    Clouds = Instance.new('Clouds', Lighting)
+    Sky = Instance.new('Sky', Lighting)
+    Bloom = Instance.new('BloomEffect', Lighting)
+    ColorCorrection = Instance.new('ColorCorrectionEffect', Lighting)
+    Depth = Instance.new('DepthOfFieldEffect', Lighting)
+    Sun = Instance.new('SunRaysEffect', Lighting)
+    
+    sethiddenproperty(workspace.Terrain, 'Decoration', true)
+    sethiddenproperty(Lighting, 'Technology', 'Future')
+    
+    Lighting.Ambient = Color3.fromRGB(50, 50, 50)
+    Lighting.Brightness = 0
+    Lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
+    Lighting.ColorShift_Top = Color3.fromRGB(0, 0, 0)
+    Lighting.EnvironmentDiffuseScale = 0
+    Lighting.EnvironmentSpecularScale = 0
+    Lighting.GlobalShadows = true
+    Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
+    Lighting.ShadowSoftness = 1
+    
+    Atmosphere.Density = .6
+    Atmosphere.Offset = 1
+    Atmosphere.Color = Color3.fromRGB(88, 80, 73)
+    Atmosphere.Decay = Color3.fromRGB(0, 0, 0)
+    Atmosphere.Glare = 0
+    Atmosphere.Haze = 10
+    
+    Clouds.Cover = 0.291
+    Clouds.Density = 0.196
+    Clouds.Color = Color3.fromRGB(255, 255, 255)
+    
+    Bloom.Intensity = 1
+    Bloom.Size = 10
+    Bloom.Threshold = .3
+    
+    ColorCorrection.Brightness = 1
+    ColorCorrection.Contrast = 2
+    ColorCorrection.Saturation = -.4
+    ColorCorrection.TintColor = Color3.fromRGB(76, 76, 76)
+    
+    Depth.FarIntensity = 1
+    Depth.FocusDistance = .4
+    Depth.InFocusRadius = 28.26
+    Depth.NearIntensity = 1
+    
+    Sun.Intensity = 0.01
+    Sun.Spread = 0.1
 end
 
 function Shader()
@@ -227,9 +283,11 @@ function EnemyESP(enemy)
                 Label.BackgroundTransparency = 1
                 Label.Position = UDim2.new(0, 0, 0, -50)
                 Label.Size = UDim2.new(0, 100, 0, 100)
-                Label.TextSize = 8
+                Label.Font = Enum.Font.Nunito
+                Label.TextSize = 15
                 Label.TextColor3 = Color3.new(255, 0, 0)
                 Label.TextStrokeTransparency = 0
+                Label.TextStrokeColor3 = Color3.new(0, 0, 0)
                 Label.TextYAlignment = Enum.TextYAlignment.Bottom
                 Label.Text = ''
                 Label.ZIndex = 10
@@ -249,7 +307,7 @@ function EnemyESP(enemy)
                 local function EnemyLoop()
                     if core:FindFirstChild(enemy.Name..'!ESP') then
                         if enemy and Root(enemy) and enemy:FindFirstChildOfClass'Humanoid' and client.Character and Root(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
-                            Label.Text = 'Health: '..Round(enemy:FindFirstChildOfClass'Humanoid'.Health, 1)..''
+                            Label.Text = Round(enemy:FindFirstChildOfClass'Humanoid'.Health, 1)..'|'..Round(enemy:FindFirstChildOfClass'Humanoid'.MaxHealth, 1)
                         end
                     else
                         EAdded:Disconnect()
@@ -300,9 +358,11 @@ function ESP(plr)
 				Label.BackgroundTransparency = 1
 				Label.Position = UDim2.new(0, 0, 0, -50)
 				Label.Size = UDim2.new(0, 100, 0, 100)
-				Label.TextSize = 8
+                Label.Font = Enum.Font.Nunito
+				Label.TextSize = 15
 				Label.TextColor3 = Color3.new(255, 255, 255)
 				Label.TextStrokeTransparency = 0
+                Label.TextStrokeColor3 = Color3.new(0, 0, 0)
 				Label.TextYAlignment = Enum.TextYAlignment.Bottom
 				Label.Text = 'Name: '..plr.Name
 				Label.ZIndex = 10
@@ -323,7 +383,7 @@ function ESP(plr)
 					if core:FindFirstChild(plr.Name..'_ESP') then
 						if plr.Character and Root(plr.Character) and plr.Character:FindFirstChildOfClass'Humanoid' and client.Character and Root(client.Character) and client.Character:FindFirstChildOfClass'Humanoid' then
 							local pos = math.floor((Root(client.Character).Position - Root(plr.Character).Position).magnitude)
-							Label.Text = plr.Name..' | Health: '..Round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..' | '..pos
+							Label.Text = '['..plr.Name..']'..' | '..Round(plr.Character:FindFirstChildOfClass'Humanoid'.Health, 1)..'/'..Round(plr.Character:FindFirstChildOfClass'Humanoid'.MaxHealth, 1)
 						end
 					else
 						Added:Disconnect()
@@ -439,6 +499,26 @@ RS:addButton('Respawn', function()
     char:Destroy()
 end)
 
+RS:addButton('Hide Name', function()
+    b = client.PlayerGui
+    c = b.WorldInfo
+    d = c.InfoFrame
+    e = d.CharacterInfo
+    f = b.LeaderboardGui
+    g = f.MainFrame
+    h = g.ScrollingFrame
+
+    e.Visible = false
+
+    for _, name in pairs(h:GetChildren()) do
+        if name:IsA'Frame' then
+            if name.Player.Text:match(e.Character.Text) then
+                name.Visible = false
+            end
+        end
+    end
+end)
+
 AS:addSlider('Fly',  100, 50, 200, function(num)
     FlySpeed = num
 end)
@@ -483,10 +563,6 @@ ES:addToggle('Enemies', nil, function(state)
     end
 end)
 
-LS:addButton('Shaders', function()
-    Shader()
-end)
-
 LS:addButton('Day', function()
     Lighting.ClockTime = 14
 end)
@@ -504,14 +580,22 @@ LS:addButton('Hide Fog', function()
 	end
 end)
 
+SSS:addButton('Realistic', function()
+    Shader()
+end)
+
+SSS:addButton('Spoopy', function()
+    Spoopy()
+end)
+
 NS:addToggle('Mods', nil, function(state)
     if not Mods then
         Mods = true
         for _, snitch in pairs(game:GetService'Players':GetChildren()) do
             if snitch:IsInGroup(5212858) then
                 game:GetService'StarterGui':SetCore('SendNotification', {
-                    Title = snitch.Name..' Is a Snitch!',
-                    Text = 'Would you like to leave?',
+                    Title = snitch.Name,
+                    Text = 'Is a snitch.',
                     Duration = 100,
                     Callback = data,
                     Button1 = 'Yes',
@@ -683,6 +767,20 @@ US:addKeybind('Toggle', Enum.KeyCode.RightControl, function()
 end)
 
 US:addButton('Close', function()
+    getgenv().Fly = false
+    getgenv().Noclip = false
+    getgenv().Walk = false
+    getgenv().NoFall = false
+    getgenv().Esp = false
+    getgenv().Tracer = false
+    getgenv().Mods = false
+    getgenv().Players = false
+    getgenv().EnemyEsp = false
+    getgenv().Notify = false
+    getgenv().Hunger = false
+    getgenv().HNotify = false
+    getgenv().Thirst = false
+    getgenv().TNotify = false
     core:WaitForChild'Midwoken':Destroy()
 end)
 
@@ -706,9 +804,9 @@ end)
 
 game:GetService'Players'.PlayerRemoving:Connect(function(player)
     if Esp then
-        for _, ui in pairs(core:GetChildren()) do
-            if ui.Name == player.Name..'_ESP' then
-                ui:Destroy()
+        for _, gui in pairs(core:GetChildren()) do
+            if gui.Name == player.Name..'_ESP' then
+                gui:Destroy()
             end
         end
     end
@@ -723,9 +821,9 @@ end)
 
 workspace.Live.ChildRemoved:Connect(function(enemy)
     if EnemyEsp then
-        for _, ui in pairs(core:GetChildren()) do
-            if ui.Name == enemy.Name..'!ESP' then
-                ui:Destroy()
+        for _, gui in pairs(core:GetChildren()) do
+            if gui.Name == enemy.Name..'!ESP' then
+                gui:Destroy()
             end
         end
     end
