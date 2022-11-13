@@ -1,4 +1,4 @@
-if not game.PlaceId == '4111023553' then
+if game.PlaceId ~= '4111023553' then
     local Lib = loadstring(game:HttpGet'https://raw.githubusercontent.com/zxciaz/VenyxUI/main/Reuploaded')()
     local UI = Lib.new('Typhon', 5013109572)
     local CP = UI:addPage('Client', 5012544693)
@@ -12,7 +12,6 @@ if not game.PlaceId == '4111023553' then
     local LS = VP:addSection('Lighting')
     local SSS = VP:addSection('Shaders')
     local NS = VP:addSection('Notify')
-    local SS = VP:addSection('Stats')
     local MP = TP:addSection('Locations')
     local US = SP:addSection('UI')
     local TS = SP:addSection('Theme')
@@ -509,7 +508,7 @@ if not game.PlaceId == '4111023553' then
     end)
 
     RS:addButton('Respawn', function()
-        if not game.PlaceId == '5735553160' then
+        if game.PlaceId ~= '5735553160' then
             char:Destroy()
         end
     end)
@@ -643,75 +642,111 @@ if not game.PlaceId == '4111023553' then
     end)
 
     MP:addButton('Etris', function()
-        Tween(CFrame.new(2355, 153, -4171))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(2355, 153, -4171))
+        end
     end)
 
     MP:addButton('Erisia', function()
-        Tween(CFrame.new(58, 153, -49))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(58, 153, -49))
+        end
     end)
 
     MP:addButton('Bandit Camp', function()
-        Tween(CFrame.new(965, 436, -27))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(965, 436, -27))
+        end
     end)
 
     MP:addButton('Sharko Cave', function()
-        Tween(CFrame.new(1150, 397, -720))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(1150, 397, -720))
+        end
     end)
 
     MP:addButton('Golems', function()
-        Tween(CFrame.new(1319, 664, 1583))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(1319, 664, 1583))
+        end
     end)
 
     MP:addButton('Duke', function()
-        Tween(CFrame.new(1394, 650, 2695))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(1394, 650, 2695))
+        end
     end)
 
     MP:addButton('Isle of Vigils', function()
-        Tween(CFrame.new(-1716, 227, 2502))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-1716, 227, 2502))
+        end
     end)
 
     MP:addButton('Isle Trainers', function()
-        Tween(CFrame.new(-1979, 176, 2770))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-1979, 176, 2770))
+        end
     end)
 
     MP:addButton('Summer Isles', function()
-        Tween(CFrame.new(-4536, 110, 677))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-4536, 110, 677))
+        end
     end)
 
     MP:addButton('Songseeker', function()
-        Tween(CFrame.new(-4460, 189, -3263))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-4460, 189, -3263))
+        end
     end)
 
     MP:addButton('Minitrysa', function()
-        Tween(CFrame.new(-4413, 189, -5946))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-4413, 189, -5946))
+        end
     end)
 
     MP:addButton('Trial', function()
-        Tween(CFrame.new(-4436, 129, -6399))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-4436, 129, -6399))
+        end
     end)
 
     MP:addButton('Starswept', function()
-        Tween(CFrame.new(-7337, 654, -510))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-7337, 654, -510))
+        end
     end)
 
     MP:addButton('Fort Merit', function()
-        Tween(CFrame.new(-8827, 565, 2860))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-8827, 565, 2860))
+        end
     end)
 
     MP:addButton('Hive', function()
-        Tween(CFrame.new(-10416, 1018, -402))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-10416, 1018, -402))
+        end
     end)
 
     MP:addButton('Primadon', function()
-        Tween(CFrame.new(-9832, 333, -6488))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-9832, 333, -6488))
+        end
     end)
 
     MP:addButton('Ferry Man', function()
-        Tween(CFrame.new(-4269, 101, -11529))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-4269, 101, -11529))
+        end
     end)
 
     MP:addButton('Void Sea', function()
-        Tween(CFrame.new(-4421.81738, 0.134027243, -10340.2676, 0.841053665, 3.31898917e-08, 0.540951669, -1.62938214e-08, 1, -3.60215395e-08, -0.540951669, 2.14818776e-08, 0.841053665))
+        if game.PlaceId ~= '5735553160' then
+            Tween(CFrame.new(-4421.81738, 0.134027243, -10340.2676, 0.841053665, 3.31898917e-08, 0.540951669, -1.62938214e-08, 1, -3.60215395e-08, -0.540951669, 2.14818776e-08, 0.841053665))
+        end
     end)
 
     US:addKeybind('Toggle', Enum.KeyCode.RightControl, function()
