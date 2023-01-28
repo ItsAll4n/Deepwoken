@@ -98,7 +98,7 @@ task.spawn(function()
             game.Players[plr].Chatted:Connect(function(msg)
                 msg = string.split(msg, ' ')
                 if msg[1] == 'small' then
-                    shrink(game.Players[plr], .3)
+                    shrink(game.Players[plr], .4)
                 end
                 if msg[1] == 'normal' then
                     shrink(game.Players[plr], 1)
@@ -112,7 +112,7 @@ task.spawn(function()
     client.Chatted:Connect(function(msg)
         msg = string.split(msg, ' ')
         if msg[1] == 'small' then
-            shrink(client, .3)
+            shrink(client, .4)
         end
         if msg[1] == 'normal' then
             shrink(client, 1)
