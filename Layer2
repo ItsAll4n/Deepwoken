@@ -1,0 +1,159 @@
+repeat wait(1) until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game:IsLoaded()
+
+client = game:GetService'Players'.LocalPlayer
+char = workspace.Live[client.Name] or client.Character or client.CharacterAdded:Wait(1)
+hrp = char:FindFirstChild'HumanoidRootPart' or char:WaitForChild'HumanoidRootPart'
+vu = game:service'VirtualUser'
+ts = game:service'TweenService'
+
+getgenv().Location = {
+    Key = CFrame.new(-4512, 465, -5944),
+    Door = CFrame.new(-5000, 376, -5828),
+    Boneboy = CFrame.new(-5792, 459, -6339),
+    WaitPos = CFrame.new(-5714, 413, -6357),
+    Generator = CFrame.new(-5555, 529, -6476),
+    Rabanstre = CFrame.new(-5272.05713, 269.352692, -4690.4917),
+    Chaser = CFrame.new(-4595, 645, -5140),
+    Safe = CFrame.new(-5942, 468, -5847),
+    Chest = CFrame.new(-4599, 645, -5185)
+}
+
+function NiggaTween(i)
+    pcall(function()
+        local ti = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+        local tween = ts:Create(hrp, ti, {CFrame = i}):Play()
+        tween.Completed:wait()
+    end)
+end
+
+function Interact(key)
+    keypress(key)
+    keyrelease(key)
+end
+
+function LiveLock(nigger)
+    workspace.CurrentCamera.CFrame = CFrame.new(hrp.Position, workspace.Live[nigger].Head.Position) * CFrame.new(0, 2, 10)
+end
+
+function NPCLock(jamal)
+    workspace.CurrentCamera.CFrame = CFrame.new(hrp.Position, workspace.NPCs[jamal].HumanoidRootPart.Position) * CFrame.new(0, 2, 10)
+end
+
+function SpedTween(location)
+    spawn(function()
+        if (hrp.Position - Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)).magnitude > 200 then
+            repeat
+                wait()
+                hrp.Position = hrp.Position - Vector3.new(0, 5, 0)
+            until hrp.Position.Y <= 5
+        end
+        local check = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)
+        if (hrp.Position - Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)).magnitude > 200 then
+            check = Vector3.new(location.Position.X, 2, location.Position.Z)
+        end
+        repeat
+            wait()
+            local dir = check - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until (hrp.Position - check).magnitude <= 10
+        repeat
+            wait()
+            local dir = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z) - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until hrp.Position.Y >= location.Y
+    end)
+end
+
+function UnSpedTween(location)
+    spawn(function()
+        local check = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z)
+        repeat
+            wait()
+            local dir = check - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until (hrp.Position - check).magnitude <= 10
+        repeat
+            wait()
+            local dir = Vector3.new(location.Position.X, location.Position.Y, location.Position.Z) - hrp.Position
+            hrp.Velocity = dir.unit * (math.random((200 - 1) * 1000, (200 + 2.5) * 1000) / 1000)
+        until hrp.Position.Y >= location.Y
+    end)
+end
+
+task.spawn(function()
+    pcall(function()
+        SpedTween(Location.Key)
+        repeat task.wait(1) until
+        hrp.Position.Y >= Location.Key.Y
+        NiggaTween(Location.Key)
+        NPCLock('TheKey')
+        task.wait(1)
+        Interact(0x45)
+        task.wait(1)
+        Interact(0x31)
+        SpedTween(Location.Door)
+        repeat task.wait(1) until
+        hrp.Position.Y >= Location.Door.Y
+        NiggaTween(Location.Door)
+        NPCLock('TheDoor')
+        task.wait(1)
+        Interact(0x45)
+        task.wait(1)
+        Interact(0x31)
+        SpedTween(Location.Boneboy)
+        task.wait(2)
+        repeat task.wait(1) until
+        hrp.Position.Y >= Location.Boneboy.Y
+        NiggaTween(Location.WaitPos)
+        repeat task.wait(1) until
+        workspace.Live:FindFirstChild'.boneboy21'
+        task.wait(1)
+        repeat wait(1) until
+        not game.workspace.Live:FindFirstChild'.boneboy21'
+        SpedTween(Location.Generator)
+        repeat task.wait(1) until
+        hrp.Position.Y >= Location.Generator.Y
+        NiggaTween(Location.Generator)
+        NPCLock('TheGenerator')
+        task.wait(1)
+        Interact(0x45)
+        task.wait(1)
+        Interact(0x31)
+        task.wait(1)
+        Interact(0x31)
+        task.wait(1)
+        SpedTween(Location.Rabanstre)
+        repeat task.wait(1) until
+        workspace.Live:FindFirstChild'.chaser'
+        task.wait(1)
+        SpedTween(Location.Chaser)
+        repeat task.wait(1) until
+        client:DistanceFromCharacter(workspace.Live['.chaser'].HumanoidRootPart.Position) <= 21
+        LiveLock('.chaser')
+        task.wait(1)
+        Interact(0x45)
+        task.wait(1)
+        UnSpedTween(Location.Safe)
+        repeat task.wait(1) until
+        client:DistanceFromCharacter(workspace.NPCs['RadioMan'].HumanoidRootPart.Position) <= 70
+        NiggaTween(Location.Safe)
+        NPCLock('RadioMan')
+        task.wait(1)
+        Interact(0x31)
+        task.wait(1)
+        Interact(0x45)
+        task.wait(1)
+        repeat task.wait(1) until
+        workspace.Live:FindFirstChild'.chaser'
+        task.wait(1)
+        repeat wait(1) until
+        not workspace.Live:FindFirstChild'.chaser'
+        task.wait(1)
+        Interact(0x45)
+        task.wait(1)
+        SpedTween(Location.Chest)
+        repeat task.wait(1) until
+        client:DistanceFromCharacter(workspace.Thrown.Model.RootPart.Position) <= 21
+        NiggaTween(Location.Chest)
+    end)
+end)
