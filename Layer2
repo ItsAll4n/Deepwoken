@@ -3,24 +3,33 @@ repeat wait(1) until game.Players.LocalPlayer and game.Players.LocalPlayer.Chara
 client = game:GetService'Players'.LocalPlayer
 char = workspace.Live[client.Name] or client.Character or client.CharacterAdded:Wait(1)
 hrp = char:FindFirstChild'HumanoidRootPart' or char:WaitForChild'HumanoidRootPart'
-vu = game:service'VirtualUser'
 ts = game:service'TweenService'
+cumshot = Instance.new'BodyVelocity'
 
 getgenv().Location = {
     Key = CFrame.new(-4512, 465, -5944),
     Door = CFrame.new(-5000, 376, -5828),
+    Sanc = CFrame.new(-5555.73779, 460.277954, -6451.77344),
     Boneboy = CFrame.new(-5792, 459, -6339),
-    WaitPos = CFrame.new(-5714, 413, -6357),
+    WaitPos = CFrame.new(-5673, 472, -6377),
+    BoneCheck = CFrame.new(-5691, 101, -6323),
     Generator = CFrame.new(-5555, 529, -6476),
     Rabanstre = CFrame.new(-5272.05713, 269.352692, -4690.4917),
     Chaser = CFrame.new(-4595, 645, -5140),
     Safe = CFrame.new(-5942, 468, -5847),
-    Chest = CFrame.new(-4599, 645, -5185)
+    Chest = CFrame.new(-4595, 645, -5188)
 }
 
-function NiggaTween(i)
+function Vel()
+    cumshot.Velocity = Vector3.new(0, 0, 0)
+    cumshot.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    cumshot.Parent = hrp
+end
+    
+
+function NiggaTween(i,speed)
     pcall(function()
-        local ti = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+        local ti = TweenInfo.new(speed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
         local tween = ts:Create(hrp, ti, {CFrame = i}):Play()
         tween.Completed:wait()
     end)
@@ -37,6 +46,41 @@ end
 
 function NPCLock(jamal)
     workspace.CurrentCamera.CFrame = CFrame.new(hrp.Position, workspace.NPCs[jamal].HumanoidRootPart.Position) * CFrame.new(0, 2, 10)
+end
+
+function Bridge()
+    for _, v in pairs(workspace.Layer2Floor1:GetChildren()) do
+        if v.Name == 'BridgeCollision' then
+            v:Destroy()
+        end
+        if v.Name == 'Baseplate' and v.CFrame == CFrame.new(-5803.41797, 439.93634, -6339.11816, -0.93967092, 0, -0.342080712, 0, 1, 0, 0.342080712, 0, -0.93967092) then
+            v:Destroy()
+        end
+        if v.Name == 'Baseplate' and v.CFrame == CFrame.new(-5706.29492, 94.9017563, -6355.49658, 0.873496294, 0, 0.486830831, 0, 1, 0, -0.486830831, 0, 0.873496294) then
+            v:Destroy()
+        end
+        if v.Name == 'Baseplate' and v.CFrame == CFrame.new(-5723.0459, 87.1017151, -6394.58691, 0.873496294, 0, 0.486830831, 0, 1, 0, -0.486830831, 0, 0.873496294) then
+            v:Destroy()
+        end
+        if v.Name == 'Baseplate' and v.CFrame == CFrame.new(-5708.18457, 299.786865, -6351.69678, 0.486839175, -0, -0.873491764, 0, 1, -0, 0.873491764, 0, 0.486839175) then
+            v:Destroy()
+        end
+        if v.Name == 'Baseplate' and v.CFrame == CFrame.new(-5694.44336, 275.466583, -6336.28613, 0.486839175, -0, -0.873491764, 0, 1, -0, 0.873491764, 0, 0.486839175) then
+            v:Destroy()
+        end
+        if v.Name == 'Baseplate' and v.CFrame == CFrame.new(-5680.66309, 69.4017944, -6317.52148, 0.873496294, 0, 0.486830831, 0, 1, 0, -0.486830831, 0, 0.873496294) then
+            v:Destroy()
+        end
+        if v.Name == 'Meshes/Rocks3' and v.CFrame == CFrame.new(-5731.34961, 52.9418869, -6341.78613, -0.15858233, -0.00693162158, 0.987321377, -0.0436491668, 0.999046922, 3.06591392e-06, -0.986380458, -0.043095272, -0.158733845) then
+            v:Destroy()
+        end
+        if v.Name == 'Meshes/Rocks3' and v.CFrame == CFrame.new(-5865.05176, 66.6698532, -6289.9502, -0.986385226, -0.0430830866, -0.158709973, -0.0436327085, 0.999047637, -2.15154141e-05, 0.15855974, 0.00690372195, -0.987325668) then
+            v:Destroy()
+        end
+        if v.Name == 'Bridge' then
+            v:Destroy()
+        end
+    end
 end
 
 function SpedTween(location)
@@ -82,10 +126,12 @@ end
 
 task.spawn(function()
     pcall(function()
+        Vel()
         SpedTween(Location.Key)
         repeat task.wait(1) until
         hrp.Position.Y >= Location.Key.Y
-        NiggaTween(Location.Key)
+        NiggaTween(Location.Key, 1)
+        task.wait(1)
         NPCLock('TheKey')
         task.wait(1)
         Interact(0x45)
@@ -94,26 +140,37 @@ task.spawn(function()
         SpedTween(Location.Door)
         repeat task.wait(1) until
         hrp.Position.Y >= Location.Door.Y
-        NiggaTween(Location.Door)
+        NiggaTween(Location.Door, 1)
+        task.wait(1)
         NPCLock('TheDoor')
         task.wait(1)
         Interact(0x45)
         task.wait(1)
         Interact(0x31)
+        SpedTween(Location.Sanc)
+        repeat task.wait(1) until
+        client:DistanceFromCharacter(workspace.NPCs['IceManSanctuary'].HumanoidRootPart.Position) <= 21
+        task.wait(1)
         SpedTween(Location.Boneboy)
-        task.wait(2)
         repeat task.wait(1) until
         hrp.Position.Y >= Location.Boneboy.Y
-        NiggaTween(Location.WaitPos)
-        repeat task.wait(1) until
-        workspace.Live:FindFirstChild'.boneboy21'
         task.wait(1)
-        repeat wait(1) until
+        NiggaTween(Location.Boneboy, 1)
+        bone = game.workspace.Live:WaitForChild'.boneboy21'
+        repeat task.wait(1) NiggaTween(Location.WaitPos, 1) until
+        client:DistanceFromCharacter(bone.LDrill.Position) <= 75
+        Bridge()
+        repeat task.wait(1) until
+        bone.LDrill.CFrame.Y <= 345
+        SpedTween(Location.BoneCheck)
+        repeat task.wait(1) until
         not game.workspace.Live:FindFirstChild'.boneboy21'
+        task.wait(1)
         SpedTween(Location.Generator)
         repeat task.wait(1) until
         hrp.Position.Y >= Location.Generator.Y
-        NiggaTween(Location.Generator)
+        NiggaTween(Location.Generator, 1)
+        task.wait(1)
         NPCLock('TheGenerator')
         task.wait(1)
         Interact(0x45)
@@ -136,7 +193,7 @@ task.spawn(function()
         UnSpedTween(Location.Safe)
         repeat task.wait(1) until
         client:DistanceFromCharacter(workspace.NPCs['RadioMan'].HumanoidRootPart.Position) <= 70
-        NiggaTween(Location.Safe)
+        NiggaTween(Location.Safe, 1)
         NPCLock('RadioMan')
         task.wait(1)
         Interact(0x31)
@@ -154,6 +211,6 @@ task.spawn(function()
         SpedTween(Location.Chest)
         repeat task.wait(1) until
         client:DistanceFromCharacter(workspace.Thrown.Model.RootPart.Position) <= 21
-        NiggaTween(Location.Chest)
+        NiggaTween(Location.Chest, 1)
     end)
 end)
