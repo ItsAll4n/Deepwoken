@@ -16,7 +16,7 @@ getgenv().Location = {
     Generator = CFrame.new(-5555, 529, -6476),
     Rabanstre = CFrame.new(-5272.05713, 269.352692, -4690.4917),
     Chaser = CFrame.new(-4595, 645, -5140),
-    Safe = CFrame.new(-5942, 468, -5847),
+    Safe = CFrame.new(-4650, 322, -5229),
     Chest = CFrame.new(-4595, 645, -5188)
 }
 
@@ -124,6 +124,35 @@ function UnSpedTween(location)
     end)
 end
 
+function Floor()
+    CHold = Instance.new'Folder'
+    CHold.Name = 'ChaserInfo'
+    CHold.Parent = game.ReplicatedStorage
+    for _, v in pairs(workspace:GetChildren()) do
+        if v.Name == 'UnionDelete' then
+            v.Parent = CHold
+        end
+        if v.Name == 'SecondStage' then
+            v.Parent = CHold
+        end
+    end
+    for _, v in pairs(workspace.Layer2Floor1:GetChildren()) do
+        if v.Name == 'ChaserFloor' then
+            v.Parent = CHold
+        end
+        if v.Name == 'Floor2Portal' then
+            v.Parent = CHold
+        end
+        if v.Name == 'Baseplate' and v:FindFirstChild'SheathStyle' then
+            v.Parent = CHold
+        end
+    end
+end
+
+function UnFloor()
+    CHold.Parent = workspace
+end
+
 task.spawn(function()
     pcall(function()
         Vel()
@@ -190,23 +219,22 @@ task.spawn(function()
         task.wait(1)
         Interact(0x45)
         task.wait(1)
-        UnSpedTween(Location.Safe)
-        repeat task.wait(1) until
-        client:DistanceFromCharacter(workspace.NPCs['RadioMan'].HumanoidRootPart.Position) <= 70
-        NiggaTween(Location.Safe, 1)
-        NPCLock('RadioMan')
+        LiveLock('.chaser')
+        task.wait(1)
+        Interact(0x45)
         task.wait(1)
         Interact(0x31)
-        task.wait(1)
-        Interact(0x45)
-        task.wait(1)
+        SpedTween(Location.Safe)
         repeat task.wait(1) until
-        workspace.Live:FindFirstChild'.chaser'
-        task.wait(1)
-        repeat wait(1) until
+        client:DistanceFromCharacter(workspace.Live['.chaser'].HumanoidRootPart.Position) >= 22
+        Floor()
+        UnSpedTween(Location.Safe)
+        repeat task.wait(1) until
+        hrp.Position.Y >= Location.Safe.Y
+        NiggaTween(Location.Safe, 1)
+        repeat task.wait(1) until
         not workspace.Live:FindFirstChild'.chaser'
-        task.wait(1)
-        Interact(0x45)
+        UnFloor()
         task.wait(1)
         SpedTween(Location.Chest)
         repeat task.wait(1) until
