@@ -1,0 +1,502 @@
+client = game:GetService'Players'.LocalPlayer
+char = workspace.Live[client.Name] or client.Character or client.CharacterAdded:Wait(1)
+hrp = char:FindFirstChild'HumanoidRootPart' or char:WaitForChild'HumanoidRootPart'
+
+- GUI -- 
+
+GFGui = Instance.new'ScreenGui'
+Holder = Instance.new'Frame'
+Motivationchat = Instance.new'TextLabel'
+Gripchat = Instance.new'TextLabel'
+
+GFGui.Name = 'GFGui'
+GFGui.Parent = workspace.CoreGUI
+GFGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Holder.Name = 'Holder'
+Holder.Parent = GFGui
+Holder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Holder.BackgroundTransparency = 1.000
+Holder.Position = UDim2.new(0, 0, 0.5, -50)
+Holder.Size = UDim2.new(0, 100, 0, 100)
+
+Motivationchat.Name = 'Motivationchat'
+Motivationchat.Parent = Holder
+Motivationchat.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Motivationchat.BackgroundTransparency = 0.700
+Motivationchat.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Motivationchat.Size = UDim2.new(0, 200, 0, 50)
+Motivationchat.Font = Enum.Font.Gotham
+Motivationchat.TextColor3 = Color3.fromRGB(255, 255, 255)
+Motivationchat.TextSize = 12.000
+Motivationchat.TextStrokeColor3 = Color3.fromRGB(255, 85, 255)
+Motivationchat.TextStrokeTransparency = 0.700
+Motivationchat.TextWrapped = true
+
+Gripchat.Name = 'Gripchat'
+Gripchat.Parent = Holder
+Gripchat.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Gripchat.BackgroundTransparency = 0.700
+Gripchat.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Gripchat.Position = UDim2.new(0, 0, -0.519999981, 0)
+Gripchat.Size = UDim2.new(0, 200, 0, 50)
+Gripchat.Font = Enum.Font.Gotham
+Gripchat.TextColor3 = Color3.fromRGB(255, 255, 255)
+Gripchat.TextSize = 12.000
+Gripchat.TextStrokeColor3 = Color3.fromRGB(255, 85, 255)
+Gripchat.TextStrokeTransparency = 0.700
+Gripchat.TextWrapped = true
+
+
+-- NPC --
+local SzexenMaid = Instance.new("Model")
+SzexenMaid.Name = "Szexen Maid"
+SzexenMaid.WorldPivot = CFrame.new(168, 3, -181.5)
+
+local Head = Instance.new("Part")
+Head.Name = "Head"
+Head.TopSurface = Enum.SurfaceType.Smooth
+Head.Color = Color3.fromRGB(218, 134, 122)
+Head.Size = Vector3.new(2, 1, 1)
+Head.CFrame = CFrame.new(168, 4.5, -181.5)
+Head.formFactor = Enum.FormFactor.Symmetric
+Head.Parent = SzexenMaid
+
+local Mesh = Instance.new("SpecialMesh")
+Mesh.Scale = Vector3.new(1.25, 1.25, 1.25)
+Mesh.Parent = Head
+
+local HatAttachment = Instance.new("Attachment")
+HatAttachment.Name = "HatAttachment"
+HatAttachment.CFrame = CFrame.new(0, 0.6000000238418579, 0)
+HatAttachment.WorldPosition = Vector3.new(168, 5.099999904632568, -181.5)
+HatAttachment.WorldCFrame = CFrame.new(168, 5.099999904632568, -181.5)
+HatAttachment.Position = Vector3.new(0, 0.6000000238418579, 0)
+HatAttachment.Parent = Head
+
+local HairAttachment = Instance.new("Attachment")
+HairAttachment.Name = "HairAttachment"
+HairAttachment.CFrame = CFrame.new(0, 0.6000000238418579, 0)
+HairAttachment.WorldPosition = Vector3.new(168, 5.099999904632568, -181.5)
+HairAttachment.WorldCFrame = CFrame.new(168, 5.099999904632568, -181.5)
+HairAttachment.Position = Vector3.new(0, 0.6000000238418579, 0)
+HairAttachment.Parent = Head
+
+local FaceFrontAttachment = Instance.new("Attachment")
+FaceFrontAttachment.Name = "FaceFrontAttachment"
+FaceFrontAttachment.CFrame = CFrame.new(0, 0, -0.6000000238418579)
+FaceFrontAttachment.WorldPosition = Vector3.new(168, 4.5, -182.10000610351562)
+FaceFrontAttachment.WorldCFrame = CFrame.new(168, 4.5, -182.10000610351562)
+FaceFrontAttachment.Position = Vector3.new(0, 0, -0.6000000238418579)
+FaceFrontAttachment.Parent = Head
+
+local FaceCenterAttachment = Instance.new("Attachment")
+FaceCenterAttachment.Name = "FaceCenterAttachment"
+FaceCenterAttachment.WorldPosition = Vector3.new(168, 4.5, -181.5)
+FaceCenterAttachment.WorldCFrame = CFrame.new(168, 4.5, -181.5)
+FaceCenterAttachment.Parent = Head
+
+local face = Instance.new("Decal")
+face.Name = "face"
+face.Texture = "rbxassetid://2813765960"
+face.Parent = Head
+
+local face1 = Instance.new("Decal")
+face1.Name = "face"
+face1.Texture = "rbxassetid://2818165600"
+face1.Parent = Head
+
+local HumanoidRootPart = Instance.new("Part")
+HumanoidRootPart.Name = "HumanoidRootPart"
+HumanoidRootPart.RightParamB = 0
+HumanoidRootPart.Anchored = true
+HumanoidRootPart.BottomSurface = Enum.SurfaceType.Smooth
+HumanoidRootPart.CanCollide = false
+HumanoidRootPart.Transparency = 1
+HumanoidRootPart.TopSurface = Enum.SurfaceType.Smooth
+HumanoidRootPart.RightParamA = 0
+HumanoidRootPart.Size = Vector3.new(2, 2, 1)
+HumanoidRootPart.CFrame = CFrame.new(168, 3, -181.5)
+HumanoidRootPart.LeftParamB = 0
+HumanoidRootPart.LeftParamA = 0
+HumanoidRootPart.formFactor = Enum.FormFactor.Symmetric
+HumanoidRootPart.Parent = SzexenMaid
+
+local RootJoint = Instance.new("Motor6D")
+RootJoint.Name = "RootJoint"
+RootJoint.C1 = CFrame.new(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+RootJoint.C0 = CFrame.new(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+RootJoint.MaxVelocity = 0.1
+RootJoint.Parent = HumanoidRootPart
+
+local LeftArm = Instance.new("Part")
+LeftArm.Name = "Left Arm"
+LeftArm.CanCollide = false
+LeftArm.Color = Color3.fromRGB(218, 134, 122)
+LeftArm.Size = Vector3.new(1, 2, 1)
+LeftArm.CFrame = CFrame.new(166.5, 3, -181.5)
+LeftArm.formFactor = Enum.FormFactor.Symmetric
+LeftArm.Parent = SzexenMaid
+
+local LeftShoulderAttachment = Instance.new("Attachment")
+LeftShoulderAttachment.Name = "LeftShoulderAttachment"
+LeftShoulderAttachment.CFrame = CFrame.new(0, 1, 0)
+LeftShoulderAttachment.WorldPosition = Vector3.new(166.5, 4, -181.5)
+LeftShoulderAttachment.WorldCFrame = CFrame.new(166.5, 4, -181.5)
+LeftShoulderAttachment.Position = Vector3.new(0, 1, 0)
+LeftShoulderAttachment.Parent = LeftArm
+
+local LeftLeg = Instance.new("Part")
+LeftLeg.Name = "Left Leg"
+LeftLeg.BottomSurface = Enum.SurfaceType.Smooth
+LeftLeg.CanCollide = false
+LeftLeg.Color = Color3.fromRGB(218, 134, 122)
+LeftLeg.Size = Vector3.new(1, 2, 1)
+LeftLeg.CFrame = CFrame.new(167.5, 1, -181.5)
+LeftLeg.formFactor = Enum.FormFactor.Symmetric
+LeftLeg.Parent = SzexenMaid
+
+local RightArm = Instance.new("Part")
+RightArm.Name = "Right Arm"
+RightArm.CanCollide = false
+RightArm.Color = Color3.fromRGB(218, 134, 122)
+RightArm.Size = Vector3.new(1, 2, 1)
+RightArm.CFrame = CFrame.new(169.5, 3, -181.5)
+RightArm.formFactor = Enum.FormFactor.Symmetric
+RightArm.Parent = SzexenMaid
+
+local RightShoulderAttachment = Instance.new("Attachment")
+RightShoulderAttachment.Name = "RightShoulderAttachment"
+RightShoulderAttachment.CFrame = CFrame.new(0, 1, 0)
+RightShoulderAttachment.WorldPosition = Vector3.new(169.5, 4, -181.5)
+RightShoulderAttachment.WorldCFrame = CFrame.new(169.5, 4, -181.5)
+RightShoulderAttachment.Position = Vector3.new(0, 1, 0)
+RightShoulderAttachment.Parent = RightArm
+
+local RightLeg = Instance.new("Part")
+RightLeg.Name = "Right Leg"
+RightLeg.BottomSurface = Enum.SurfaceType.Smooth
+RightLeg.CanCollide = false
+RightLeg.Color = Color3.fromRGB(218, 134, 122)
+RightLeg.Size = Vector3.new(1, 2, 1)
+RightLeg.CFrame = CFrame.new(168.5, 1, -181.5)
+RightLeg.formFactor = Enum.FormFactor.Symmetric
+RightLeg.Parent = SzexenMaid
+
+local Torso = Instance.new("Part")
+Torso.Name = "Torso"
+Torso.RightParamB = 0
+Torso.RightParamA = 0
+Torso.Color = Color3.fromRGB(218, 134, 122)
+Torso.RightSurface = Enum.SurfaceType.Weld
+Torso.Size = Vector3.new(2, 2, 1)
+Torso.LeftSurface = Enum.SurfaceType.Weld
+Torso.CFrame = CFrame.new(168, 3, -181.5)
+Torso.LeftParamB = 0
+Torso.LeftParamA = 0
+Torso.formFactor = Enum.FormFactor.Symmetric
+Torso.Parent = SzexenMaid
+
+local roblox = Instance.new("Decal")
+roblox.Name = "roblox"
+roblox.Parent = Torso
+
+local RightShoulder = Instance.new("Motor6D")
+RightShoulder.Name = "Right Shoulder"
+RightShoulder.C1 = CFrame.new(-0.5, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+RightShoulder.C0 = CFrame.new(1, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+RightShoulder.MaxVelocity = 0.1
+RightShoulder.Parent = Torso
+
+local RightHip = Instance.new("Motor6D")
+RightHip.Name = "Right Hip"
+RightHip.C1 = CFrame.new(0.5, 1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+RightHip.C0 = CFrame.new(1, -1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+RightHip.MaxVelocity = 0.1
+RightHip.Parent = Torso
+
+local Neck = Instance.new("Motor6D")
+Neck.Name = "Neck"
+Neck.C1 = CFrame.new(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+Neck.C0 = CFrame.new(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+Neck.MaxVelocity = 0.1
+Neck.Parent = Torso
+
+local LeftShoulder = Instance.new("Motor6D")
+LeftShoulder.Name = "Left Shoulder"
+LeftShoulder.C1 = CFrame.new(0.5, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, -0, 0)
+LeftShoulder.C0 = CFrame.new(-1, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+LeftShoulder.MaxVelocity = 0.1
+LeftShoulder.Parent = Torso
+
+local LeftHip = Instance.new("Motor6D")
+LeftHip.Name = "Left Hip"
+LeftHip.C1 = CFrame.new(-0.5, 1, 0, 0, 0, -1, 0, 1, 0, 1, -0, 0)
+LeftHip.C0 = CFrame.new(-1, -1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+LeftHip.MaxVelocity = 0.1
+LeftHip.Parent = Torso
+
+local WaistFrontAttachment = Instance.new("Attachment")
+WaistFrontAttachment.Name = "WaistFrontAttachment"
+WaistFrontAttachment.CFrame = CFrame.new(0, -1, -0.5)
+WaistFrontAttachment.WorldPosition = Vector3.new(168, 2, -182)
+WaistFrontAttachment.WorldCFrame = CFrame.new(168, 2, -182)
+WaistFrontAttachment.Position = Vector3.new(0, -1, -0.5)
+WaistFrontAttachment.Parent = Torso
+
+local WaistCenterAttachment = Instance.new("Attachment")
+WaistCenterAttachment.Name = "WaistCenterAttachment"
+WaistCenterAttachment.CFrame = CFrame.new(0, -1, 0)
+WaistCenterAttachment.WorldPosition = Vector3.new(168, 2, -181.5)
+WaistCenterAttachment.WorldCFrame = CFrame.new(168, 2, -181.5)
+WaistCenterAttachment.Position = Vector3.new(0, -1, 0)
+WaistCenterAttachment.Parent = Torso
+
+local WaistBackAttachment = Instance.new("Attachment")
+WaistBackAttachment.Name = "WaistBackAttachment"
+WaistBackAttachment.CFrame = CFrame.new(0, -1, 0.5)
+WaistBackAttachment.WorldPosition = Vector3.new(168, 2, -181)
+WaistBackAttachment.WorldCFrame = CFrame.new(168, 2, -181)
+WaistBackAttachment.Position = Vector3.new(0, -1, 0.5)
+WaistBackAttachment.Parent = Torso
+
+local RightCollarAttachment = Instance.new("Attachment")
+RightCollarAttachment.Name = "RightCollarAttachment"
+RightCollarAttachment.CFrame = CFrame.new(1, 1, 0)
+RightCollarAttachment.WorldPosition = Vector3.new(169, 4, -181.5)
+RightCollarAttachment.WorldCFrame = CFrame.new(169, 4, -181.5)
+RightCollarAttachment.Position = Vector3.new(1, 1, 0)
+RightCollarAttachment.Parent = Torso
+
+local NeckAttachment = Instance.new("Attachment")
+NeckAttachment.Name = "NeckAttachment"
+NeckAttachment.CFrame = CFrame.new(0, 1, 0)
+NeckAttachment.WorldPosition = Vector3.new(168, 4, -181.5)
+NeckAttachment.WorldCFrame = CFrame.new(168, 4, -181.5)
+NeckAttachment.Position = Vector3.new(0, 1, 0)
+NeckAttachment.Parent = Torso
+
+local LeftCollarAttachment = Instance.new("Attachment")
+LeftCollarAttachment.Name = "LeftCollarAttachment"
+LeftCollarAttachment.CFrame = CFrame.new(-1, 1, 0)
+LeftCollarAttachment.WorldPosition = Vector3.new(167, 4, -181.5)
+LeftCollarAttachment.WorldCFrame = CFrame.new(167, 4, -181.5)
+LeftCollarAttachment.Position = Vector3.new(-1, 1, 0)
+LeftCollarAttachment.Parent = Torso
+
+local BodyFrontAttachment = Instance.new("Attachment")
+BodyFrontAttachment.Name = "BodyFrontAttachment"
+BodyFrontAttachment.CFrame = CFrame.new(0, 0, -0.5)
+BodyFrontAttachment.WorldPosition = Vector3.new(168, 3, -182)
+BodyFrontAttachment.WorldCFrame = CFrame.new(168, 3, -182)
+BodyFrontAttachment.Position = Vector3.new(0, 0, -0.5)
+BodyFrontAttachment.Parent = Torso
+
+local BodyBackAttachment = Instance.new("Attachment")
+BodyBackAttachment.Name = "BodyBackAttachment"
+BodyBackAttachment.CFrame = CFrame.new(0, 0, 0.5)
+BodyBackAttachment.WorldPosition = Vector3.new(168, 3, -181)
+BodyBackAttachment.WorldCFrame = CFrame.new(168, 3, -181)
+BodyBackAttachment.Position = Vector3.new(0, 0, 0.5)
+BodyBackAttachment.Parent = Torso
+
+local BodyColors = Instance.new("BodyColors")
+BodyColors.LeftArmColor3 = Color3.fromRGB(218, 134, 122)
+BodyColors.HeadColor3 = Color3.fromRGB(218, 134, 122)
+BodyColors.TorsoColor3 = Color3.fromRGB(218, 134, 122)
+BodyColors.LeftLegColor3 = Color3.fromRGB(218, 134, 122)
+BodyColors.RightLegColor3 = Color3.fromRGB(218, 134, 122)
+BodyColors.RightArmColor3 = Color3.fromRGB(218, 134, 122)
+BodyColors.Parent = SzexenMaid
+
+local Shirt = Instance.new("Shirt")
+Shirt.Name = "Shirt"
+Shirt.ShirtTemplate = "http://www.roblox.com/asset/?id=9962612174"
+Shirt.Parent = SzexenMaid
+
+local Pants = Instance.new("Pants")
+Pants.Name = "Pants"
+Pants.PantsTemplate = "http://www.roblox.com/asset/?id=9962616226"
+Pants.Parent = SzexenMaid
+
+local Humanoid = Instance.new("Humanoid")
+Humanoid.Parent = SzexenMaid
+
+local FlufflyPixie = Instance.new("Accessory")
+FlufflyPixie.Name = "Fluffly Pixie"
+FlufflyPixie.Parent = SzexenMaid
+
+local Handle = Instance.new("Part")
+Handle.Name = "Handle"
+Handle.BottomSurface = Enum.SurfaceType.Smooth
+Handle.TopSurface = Enum.SurfaceType.Smooth
+Handle.RotVelocity = Vector3.new(1, 1, 1)
+Handle.Size = Vector3.new(1, 1, 1)
+Handle.Locked = true
+Handle.CFrame = CFrame.new(168, 4.5, -181.5, -4.371138828673793e-08, 0, -1, -6.574071117001946e-31, 1, 2.8736178176782374e-38, 1, 6.574071117001946e-31, -4.371138828673793e-08)
+Handle.Parent = FlufflyPixie
+
+local SpecialMesh = Instance.new("SpecialMesh")
+SpecialMesh.Name = "SpecialMesh"
+SpecialMesh.Scale = Vector3.new(1.0000001192092896, 1.0000001192092896, 1)
+SpecialMesh.MeshId = "rbxassetid://11387054529"
+SpecialMesh.TextureId = "rbxassetid://11387057110"
+SpecialMesh.MeshType = Enum.MeshType.FileMesh
+SpecialMesh.Parent = Handle
+
+local AvatarPartScaleType = Instance.new("StringValue")
+AvatarPartScaleType.Name = "AvatarPartScaleType"
+AvatarPartScaleType.Value = "Classic"
+AvatarPartScaleType.Parent = Handle
+
+local FaceFrontAttachment1 = Instance.new("Attachment")
+FaceFrontAttachment1.Name = "FaceFrontAttachment"
+FaceFrontAttachment1.WorldSecondaryAxis = Vector3.new(0, 1, -1.401298464324817e-45)
+FaceFrontAttachment1.WorldOrientation = Vector3.new(-7.987401246651457e-44, -0, 0)
+FaceFrontAttachment1.CFrame = CFrame.new(-0.6000000238418579, 0, 0, -4.371138828673793e-08, -6.574071117001946e-31, 1, 0, 1, 6.574071117001946e-31, -1, 2.8736178176782374e-38, -4.371138828673793e-08)
+FaceFrontAttachment1.WorldPosition = Vector3.new(168, 4.5, -182.10000610351562)
+FaceFrontAttachment1.Axis = Vector3.new(-4.371138828673793e-08, 0, -1)
+FaceFrontAttachment1.Rotation = Vector3.new(0, 90, 0)
+FaceFrontAttachment1.WorldCFrame = CFrame.new(168, 4.5, -182.10000610351562, 1, 0, 0, 0, 1, -1.401298464324817e-45, 0, -1.401298464324817e-45, 1)
+FaceFrontAttachment1.SecondaryAxis = Vector3.new(-6.574071117001946e-31, 1, 2.8736178176782374e-38)
+FaceFrontAttachment1.Position = Vector3.new(-0.6000000238418579, 0, 0)
+FaceFrontAttachment1.Orientation = Vector3.new(-3.766665173978287e-29, 90, 0)
+FaceFrontAttachment1.Parent = Handle
+
+local OriginalSize = Instance.new("Vector3Value")
+OriginalSize.Name = "OriginalSize"
+OriginalSize.Value = Vector3.new(1, 1, 1)
+OriginalSize.Parent = Handle
+
+local CatTail = Instance.new("Accessory")
+CatTail.Name = "Cat Tail"
+CatTail.AttachmentPos = Vector3.new(-0.03472900390625, -0.2449188232421875, -0.5051956176757812)
+CatTail.AttachmentPoint = CFrame.new(-0.03472900390625, -0.2449188232421875, -0.5051956176757812)
+CatTail.Parent = SzexenMaid
+
+local Handle1 = Instance.new("Part")
+Handle1.Name = "Handle"
+Handle1.BottomSurface = Enum.SurfaceType.Smooth
+Handle1.TopSurface = Enum.SurfaceType.Smooth
+Handle1.RotVelocity = Vector3.new(1, 1, 1)
+Handle1.Size = Vector3.new(1, 1, 1)
+Handle1.Locked = true
+Handle1.CFrame = CFrame.new(168.03472900390625, 2.2449188232421875, -180.49481201171875)
+Handle1.Parent = CatTail
+
+local SpecialMesh1 = Instance.new("SpecialMesh")
+SpecialMesh1.Name = "SpecialMesh"
+SpecialMesh1.Scale = Vector3.new(1.0000001192092896, 1.0000001192092896, 1)
+SpecialMesh1.MeshId = "rbxassetid://9363043151"
+SpecialMesh1.TextureId = "rbxassetid://9243659349"
+SpecialMesh1.MeshType = Enum.MeshType.FileMesh
+SpecialMesh1.Parent = Handle1
+
+local AvatarPartScaleType1 = Instance.new("StringValue")
+AvatarPartScaleType1.Name = "AvatarPartScaleType"
+AvatarPartScaleType1.Value = "Classic"
+AvatarPartScaleType1.Parent = Handle1
+
+local WaistBackAttachment1 = Instance.new("Attachment")
+WaistBackAttachment1.Name = "WaistBackAttachment"
+WaistBackAttachment1.CFrame = CFrame.new(-0.03472900390625, -0.2449188381433487, -0.5051956176757812)
+WaistBackAttachment1.WorldPosition = Vector3.new(168, 2, -181)
+WaistBackAttachment1.WorldCFrame = CFrame.new(168, 2, -181)
+WaistBackAttachment1.Position = Vector3.new(-0.03472900390625, -0.2449188381433487, -0.5051956176757812)
+WaistBackAttachment1.Parent = Handle1
+
+local OriginalSize1 = Instance.new("Vector3Value")
+OriginalSize1.Name = "OriginalSize"
+OriginalSize1.Value = Vector3.new(1, 1, 1)
+OriginalSize1.Parent = Handle1
+
+local ThumbnailConfiguration = Instance.new("Configuration")
+ThumbnailConfiguration.Name = "ThumbnailConfiguration"
+ThumbnailConfiguration.Parent = CatTail
+
+local ThumbnailCameraTarget = Instance.new("ObjectValue")
+ThumbnailCameraTarget.Name = "ThumbnailCameraTarget"
+ThumbnailCameraTarget.Parent = ThumbnailConfiguration
+
+local ThumbnailCameraValue = Instance.new("CFrameValue")
+ThumbnailCameraValue.Name = "ThumbnailCameraValue"
+ThumbnailCameraValue.Value = CFrame.new(-2.396522045135498, 0.45619967579841614, 0.568792998790741, 0.17364822328090668, 0.2047530561685562, -0.963287353515625, 0, 0.9781476259231567, 0.20791170001029968, 0.9848077297210693, -0.0361034981906414, 0.1698535978794098)
+ThumbnailCameraValue.Parent = ThumbnailConfiguration
+
+local Braided = Instance.new("Accessory")
+Braided.Name = "Braided"
+Braided.Parent = SzexenMaid
+
+local Handle2 = Instance.new("Part")
+Handle2.Name = "Handle"
+Handle2.BottomSurface = Enum.SurfaceType.Smooth
+Handle2.TopSurface = Enum.SurfaceType.Smooth
+Handle2.RotVelocity = Vector3.new(1, 1, 1)
+Handle2.Size = Vector3.new(1, 1, 1)
+Handle2.Locked = true
+Handle2.CFrame = CFrame.new(168, 4.199999809265137, -181.60000610351562)
+Handle2.Parent = Braided
+
+local AvatarPartScaleType2 = Instance.new("StringValue")
+AvatarPartScaleType2.Name = "AvatarPartScaleType"
+AvatarPartScaleType2.Value = "Classic"
+AvatarPartScaleType2.Parent = Handle2
+
+local FaceFrontAttachment2 = Instance.new("Attachment")
+FaceFrontAttachment2.Name = "FaceFrontAttachment"
+FaceFrontAttachment2.CFrame = CFrame.new(0, 0.3000001907348633, -0.5)
+FaceFrontAttachment2.WorldPosition = Vector3.new(168, 4.5, -182.10000610351562)
+FaceFrontAttachment2.WorldCFrame = CFrame.new(168, 4.5, -182.10000610351562)
+FaceFrontAttachment2.Position = Vector3.new(0, 0.3000001907348633, -0.5)
+FaceFrontAttachment2.Parent = Handle2
+
+local OriginalSize2 = Instance.new("Vector3Value")
+OriginalSize2.Name = "OriginalSize"
+OriginalSize2.Value = Vector3.new(1, 1, 1)
+OriginalSize2.Parent = Handle2
+
+local SpecialMesh2 = Instance.new("SpecialMesh")
+SpecialMesh2.Name = "SpecialMesh"
+SpecialMesh2.Scale = Vector3.new(1.0000001192092896, 1.0000001192092896, 1)
+SpecialMesh2.MeshId = "rbxassetid://10080720582"
+SpecialMesh2.TextureId = "rbxassetid://11387057110"
+SpecialMesh2.MeshType = Enum.MeshType.FileMesh
+SpecialMesh2.Parent = Handle2
+
+local Cloud = Instance.new("MeshPart")
+Cloud.Name = "Cloud"
+Cloud.Anchored = true
+Cloud.CanCollide = false
+Cloud.CanQuery = false
+Cloud.Color = Color3.fromRGB(255, 255, 0)
+Cloud.Material = Enum.Material.SmoothPlastic
+Cloud.Size = Vector3.new(3.763446807861328, 2.486964464187622, 6.745027542114258)
+Cloud.CFrame = CFrame.new(167.88172912597656, 1.243482232093811, -181.3725128173828)
+Cloud.Parent = SzexenMaid
+
+RootJoint.Part1 = Torso
+RootJoint.Part0 = HumanoidRootPart
+
+RightShoulder.Part1 = RightArm
+RightShoulder.Part0 = Torso
+
+RightHip.Part1 = RightLeg
+RightHip.Part0 = Torso
+
+Neck.Part1 = Head
+Neck.Part0 = Torso
+
+LeftShoulder.Part1 = LeftArm
+LeftShoulder.Part0 = Torso
+
+LeftHip.Part1 = LeftLeg
+LeftHip.Part0 = Torso
+
+Humanoid.Torso = HumanoidRootPart
+Humanoid.RightLeg = RightLeg
+Humanoid.LeftLeg = LeftLeg
+
+ThumbnailCameraTarget.Value = Handle1
+
+SzexenMaid.PrimaryPart = HumanoidRootPart
+SzexenMaid.Parent = char
