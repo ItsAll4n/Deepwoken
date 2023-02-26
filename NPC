@@ -10,7 +10,7 @@ Motivationchat = Instance.new'TextLabel'
 Gripchat = Instance.new'TextLabel'
 
 GFGui.Name = 'GFGui'
-GFGui.Parent = workspace.CoreGUI
+GFGui.Parent = CoreGui
 GFGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Holder.Name = 'Holder'
